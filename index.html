@@ -1,229 +1,373 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Drive to MEGA</title>
-<meta name="description" content="Transfer files from Google Drive to MEGA straight from your browser — no server, no middleman.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-:root{
-  --bg:#f5f6f8; --panel:#ffffff; --panel-2:#f0f2f5; --line:#e2e5ea; --text:#15181d; --muted:#667085;
-  --accent:#2f6fed; --accent-ink:#ffffff; --g:#1a8f5a; --mega:#d9272e; --warn:#b7791f; --bad:#c53030;
-  --sel:rgba(47,111,237,.10); --shadow:0 1px 2px rgba(16,24,40,.06),0 4px 16px rgba(16,24,40,.06);
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- Strict CSP: only this origin, Google sign-in and the Drive/MEGA APIs. No inline scripts or styles, no eval. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://accounts.google.com/gsi/client; style-src 'self' https://accounts.google.com/gsi/style; img-src 'self' data: blob: https://*.googleusercontent.com; font-src 'self'; connect-src 'self' https://www.googleapis.com https://content.googleapis.com https://*.googleusercontent.com https://oauth2.googleapis.com https://accounts.google.com/gsi/ https://*.mega.co.nz https://*.mega.nz https://*.mega.io; frame-src https://accounts.google.com/gsi/; worker-src 'self'; manifest-src 'self'; media-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+
+<title>Drive to MEGA — Copy Google Drive to MEGA, Free &amp; Private</title>
+<meta name="description" content="Transfer files and folders from Google Drive to MEGA directly in your browser. Free, no sign-up, no server — files stream from Google straight into MEGA's end-to-end encryption. Works as an installable app.">
+<meta name="keywords" content="Google Drive to MEGA, transfer Google Drive to MEGA, copy Drive to MEGA, migrate Google Drive, MEGA upload, cloud to cloud transfer, Google Drive backup">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="author" content="Drive to MEGA">
+<meta name="application-name" content="Drive to MEGA">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f4f6fa">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0b0e14">
+<link rel="canonical" href="https://drivetomega.github.io/">
+
+<!-- Open Graph / social -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Drive to MEGA">
+<meta property="og:title" content="Drive to MEGA — Copy Google Drive to MEGA in your browser">
+<meta property="og:description" content="Free, private cloud-to-cloud transfer. Files stream from Google Drive straight into MEGA's end-to-end encryption — no server in between.">
+<meta property="og:url" content="https://drivetomega.github.io/">
+<meta property="og:image" content="https://drivetomega.github.io/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Drive to MEGA logo — a cloud with a transfer arrow, and the tagline: Google Drive to MEGA, straight from your browser.">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Drive to MEGA — Copy Google Drive to MEGA in your browser">
+<meta name="twitter:description" content="Free, private cloud-to-cloud transfer. No server, no sign-up — runs entirely in your browser.">
+<meta name="twitter:image" content="https://drivetomega.github.io/assets/og-image.png">
+
+<!-- Icons & PWA -->
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/assets/icons/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Drive→MEGA">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="format-detection" content="telephone=no">
+
+<link rel="preload" href="/assets/js/app.js" as="script">
+<link rel="dns-prefetch" href="https://www.googleapis.com">
+<link rel="dns-prefetch" href="https://g.api.mega.co.nz">
+<link rel="stylesheet" href="/assets/css/app.css">
+<script src="/assets/js/theme-init.js"></script>
+<script src="/assets/js/config.js" defer></script>
+<script src="/assets/js/app.js" defer></script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://drivetomega.github.io/#app",
+      "name": "Drive to MEGA",
+      "url": "https://drivetomega.github.io/",
+      "description": "Transfer files and folders from Google Drive to MEGA directly in your browser, with no server in between.",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any (web browser)",
+      "browserRequirements": "Requires JavaScript and a modern browser (Chrome, Edge, Firefox, Safari).",
+      "image": "https://drivetomega.github.io/assets/icons/icon-512.png",
+      "screenshot": "https://drivetomega.github.io/assets/screenshots/desktop.png",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "featureList": [
+        "Copy files and whole folders from Google Drive to MEGA",
+        "Streams directly into MEGA's client-side encryption",
+        "Supports My Drive, Shared with me, Starred and Shared drives",
+        "Exports Google Docs, Sheets and Slides to Office or PDF",
+        "Skips files that already exist, automatic retries, pause and resume",
+        "Installable progressive web app"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://drivetomega.github.io/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "Is Drive to MEGA free?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. It is free and open source, with no account, no limits and no ads. You only need a Google account and a MEGA account." } },
+        { "@type": "Question", "name": "Do my files pass through your server?", "acceptedAnswer": { "@type": "Answer", "text": "No. There is no server. Files stream from Google's API into your browser and are encrypted by MEGA's library in your browser before upload." } },
+        { "@type": "Question", "name": "Is my MEGA password stored?", "acceptedAnswer": { "@type": "Answer", "text": "No. Your password is only used in your browser to derive MEGA's login key and is never saved or sent anywhere except MEGA." } },
+        { "@type": "Question", "name": "Can it change or delete my Google Drive files?", "acceptedAnswer": { "@type": "Answer", "text": "No. It requests read-only Drive access, so it can list and download files but never modify or delete them." } },
+        { "@type": "Question", "name": "What happens to Google Docs, Sheets and Slides?", "acceptedAnswer": { "@type": "Answer", "text": "They are exported to Word, Excel and PowerPoint (or PDF), or skipped — your choice." } },
+        { "@type": "Question", "name": "Can I close the tab while it transfers?", "acceptedAnswer": { "@type": "Answer", "text": "No. Transfers run in your browser, so keep the tab or app open until the queue finishes. The app keeps the screen awake and can notify you when done." } }
+      ]
+    }
+  ]
 }
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --bg:#0f1115; --panel:#171a20; --panel-2:#1e222a; --line:#2a2f38; --text:#e7e9ee; --muted:#9097a3;
-    --accent:#5b8dff; --accent-ink:#0b0d12; --g:#3ccf8e; --mega:#ff5a5f; --warn:#e0a84a; --bad:#ff6b6b;
-    --sel:rgba(91,141,255,.14); --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
-  }
-}
-:root[data-theme="dark"]{
-  --bg:#0f1115; --panel:#171a20; --panel-2:#1e222a; --line:#2a2f38; --text:#e7e9ee; --muted:#9097a3;
-  --accent:#5b8dff; --accent-ink:#0b0d12; --g:#3ccf8e; --mega:#ff5a5f; --warn:#e0a84a; --bad:#ff6b6b;
-  --sel:rgba(91,141,255,.14); --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
-}
-*{box-sizing:border-box}
-[hidden]{display:none!important}
-html,body{margin:0}
-body{background:var(--bg);color:var(--text);font:14px/1.45 Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;min-height:100vh}
-button,input,select{font:inherit;color:inherit}
-.wrap{max-width:1240px;margin:0 auto;padding:20px 16px 40px}
-header{display:flex;align-items:center;gap:12px;margin-bottom:18px;flex-wrap:wrap}
-.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px;letter-spacing:-.01em}
-.logo .dots{display:flex;gap:4px;align-items:center}
-.logo .dot{width:10px;height:10px;border-radius:50%}
-.logo .arrow{color:var(--muted);font-weight:500}
-header .sp{flex:1}
-.btn{border:1px solid var(--line);background:var(--panel);padding:8px 14px;border-radius:9px;cursor:pointer;font-weight:500;display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
-.btn:hover{background:var(--panel-2)}
-.btn:disabled{opacity:.5;cursor:not-allowed}
-.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
-.btn.primary:hover{filter:brightness(1.05)}
-.btn.sm{padding:5px 10px;font-size:13px;border-radius:7px}
-.btn.ghost{background:transparent;border-color:transparent}
-.btn.ghost:hover{background:var(--panel-2)}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-@media (max-width:860px){.grid{grid-template-columns:1fr}}
-.pane{display:flex;flex-direction:column;min-height:460px;max-height:620px}
-.pane-h{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap}
-.pane-h h2{font-size:15px;margin:0;display:flex;align-items:center;gap:8px}
-.badge{font-size:11px;font-weight:600;padding:2px 8px;border-radius:99px;background:var(--panel-2);color:var(--muted)}
-.badge.on{color:var(--g);background:color-mix(in srgb,var(--g) 14%,transparent)}
-.pane-h .sp{flex:1}
-.crumbs{display:flex;flex-wrap:wrap;align-items:center;gap:2px;padding:10px 16px;border-bottom:1px solid var(--line);font-size:13px;min-height:42px}
-.crumbs button{border:0;background:none;padding:3px 6px;border-radius:6px;cursor:pointer;color:var(--muted);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.crumbs button:hover{background:var(--panel-2);color:var(--text)}
-.crumbs button:last-child{color:var(--text);font-weight:600}
-.crumbs .sep{color:var(--muted);opacity:.6}
-.tabs{display:flex;gap:4px;padding:8px 12px 0}
-.tab{border:0;background:none;padding:6px 10px;border-radius:7px;cursor:pointer;color:var(--muted);font-weight:500;font-size:13px}
-.tab.active{background:var(--panel-2);color:var(--text)}
-.list{flex:1;overflow:auto;padding:4px 6px 8px}
-.row{display:grid;grid-template-columns:28px 22px 1fr auto;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;cursor:default;user-select:none}
-.row:hover{background:var(--panel-2)}
-.row.sel{background:var(--sel)}
-.row .name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.row.folder .name{cursor:pointer;font-weight:500}
-.row.folder .name:hover{text-decoration:underline}
-.row .meta{color:var(--muted);font-size:12px;font-family:"JetBrains Mono",ui-monospace,monospace;white-space:nowrap}
-.row.mrow{grid-template-columns:22px 1fr auto}
-.row.mrow.dest{background:var(--sel)}
-.ic{width:18px;height:18px;display:block}
-input[type=checkbox]{width:16px;height:16px;accent-color:var(--accent);cursor:pointer}
-.empty{padding:40px 20px;text-align:center;color:var(--muted)}
-.empty b{display:block;color:var(--text);font-size:15px;margin-bottom:6px}
-.empty .btn{margin-top:14px}
-.pane-f{border-top:1px solid var(--line);padding:10px 16px;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted);flex-wrap:wrap}
-.pane-f .sp{flex:1}
-.field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
-.field label{font-size:12px;font-weight:600;color:var(--muted)}
-.field input,.field select{padding:9px 11px;border:1px solid var(--line);border-radius:8px;background:var(--panel);outline:none;width:100%}
-.field input:focus{border-color:var(--accent)}
-.hint{font-size:12px;color:var(--muted)}
-.form{padding:18px 18px 8px;max-width:380px;margin:0 auto;width:100%}
-.err{color:var(--bad);font-size:13px;margin:6px 0 10px}
-.bar{display:flex;gap:10px;align-items:center;padding:14px 16px;flex-wrap:wrap}
-.bar .sp{flex:1}
-.opt{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)}
-.opt select{padding:5px 8px;border:1px solid var(--line);border-radius:7px;background:var(--panel)}
-.queue{margin-top:16px}
-.qhead{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap}
-.qhead h2{margin:0;font-size:15px}
-.qhead .sp{flex:1}
-.stats{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12px;color:var(--muted)}
-.overall{height:6px;background:var(--panel-2);border-radius:99px;overflow:hidden;margin:0 16px 4px}
-.overall i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--g),var(--accent));transition:width .3s}
-.qlist{max-height:380px;overflow:auto;padding:6px}
-.qi{display:grid;grid-template-columns:1fr 150px 90px;gap:12px;align-items:center;padding:8px 10px;border-radius:8px}
-.qi:nth-child(odd){background:color-mix(in srgb,var(--panel-2) 50%,transparent)}
-.qi .n{overflow:hidden;min-width:0}
-.qi .n div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.qi .n small{color:var(--muted);font-size:12px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pb{height:5px;background:var(--panel-2);border-radius:99px;overflow:hidden}
-.pb i{display:block;height:100%;width:0;background:var(--accent);transition:width .2s}
-.qi .st{font-size:12px;text-align:right;font-weight:600}
-.st.done{color:var(--g)} .st.error{color:var(--bad)} .st.skipped{color:var(--muted)} .st.active{color:var(--accent)} .st.queued{color:var(--muted);font-weight:500}
-@media (max-width:600px){.qi{grid-template-columns:1fr 70px}.qi .pbw{display:none}}
-.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:13px;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:opacity .2s;max-width:calc(100% - 32px);z-index:20}
-.toast.show{opacity:1}
-.banner{display:none;margin-bottom:16px;padding:12px 16px;border-radius:12px;border:1px solid color-mix(in srgb,var(--warn) 40%,transparent);background:color-mix(in srgb,var(--warn) 10%,var(--panel));align-items:center;gap:12px;flex-wrap:wrap}
-.banner.show{display:flex}
-.banner .sp{flex:1}
-dialog{border:1px solid var(--line);border-radius:14px;background:var(--panel);color:var(--text);padding:0;max-width:520px;width:calc(100% - 32px);box-shadow:var(--shadow)}
-dialog::backdrop{background:rgba(0,0,0,.45)}
-.dlg-h{padding:16px 18px;border-bottom:1px solid var(--line);font-weight:700}
-.dlg-b{padding:16px 18px}
-.dlg-b ol{padding-left:18px;margin:8px 0 14px;color:var(--muted);font-size:13px}
-.dlg-b ol li{margin-bottom:4px}
-.dlg-b code{font-family:"JetBrains Mono",monospace;font-size:12px;background:var(--panel-2);padding:1px 5px;border-radius:5px;color:var(--text);word-break:break-all}
-.dlg-f{padding:12px 18px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:8px}
-.spin{width:14px;height:14px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:sp .7s linear infinite;display:inline-block}
-@keyframes sp{to{transform:rotate(360deg)}}
-footer{margin-top:22px;color:var(--muted);font-size:12px;text-align:center}
-.quota{height:4px;background:var(--panel-2);border-radius:99px;overflow:hidden;width:90px}
-.quota i{display:block;height:100%;background:var(--mega)}
-</style>
+</script>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <div class="logo">
-      <div class="dots"><span class="dot" style="background:var(--g)"></span><span class="arrow">→</span><span class="dot" style="background:var(--mega)"></span></div>
-      Drive to MEGA
-    </div>
-    <div class="sp"></div>
-    <button class="btn ghost sm" id="btnSettings" title="Google OAuth settings">⚙ Settings</button>
-    <button class="btn ghost sm" id="btnTheme" title="Toggle theme" aria-label="Toggle theme"><svg class="ic" viewBox="0 0 24 24"><path fill="currentColor" d="M12 3a9 9 0 1 0 0 18V3z"/><circle cx="12" cy="12" r="8.2" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button>
-  </header>
+<a class="skip" href="#workspace">Skip to the app</a>
 
-  <div class="banner" id="renewBanner">
-    <span>⏳ Your Google session is about to expire. Transfers are paused until you renew it.</span>
-    <div class="sp"></div>
-    <button class="btn primary sm" id="btnRenew">Renew Google session</button>
+<!-- Preloader: removed by app.js once the app is ready; CSS fades it out after 6s regardless. -->
+<div id="preloader" role="status" aria-label="Loading Drive to MEGA">
+  <div class="pl-box">
+    <div class="pl-mark">
+      <span class="pl-ring"></span>
+      <svg viewBox="0 0 512 512" aria-hidden="true">
+        <defs>
+          <linearGradient id="pl-bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#10b981"/><stop offset=".52" stop-color="#3b6cf6"/><stop offset="1" stop-color="#e11d48"/></linearGradient>
+          <linearGradient id="pl-st" gradientUnits="userSpaceOnUse" x1="140" y1="0" x2="364" y2="0"><stop offset="0" stop-color="#10b981"/><stop offset=".55" stop-color="#3b6cf6"/><stop offset="1" stop-color="#e11d48"/></linearGradient>
+        </defs>
+        <rect class="pl-tile" width="512" height="512" rx="116" fill="url(#pl-bg)"/>
+        <path class="pl-cloud" fill="#fff" d="M150 372c-46 0-82-35-82-80 0-41 31-75 71-79 14-50 59-86 113-86 55 0 101 38 113 90 41 3 79 36 79 78 0 43-35 77-79 77z"/>
+        <g fill="none" stroke="url(#pl-st)" stroke-linecap="round" stroke-linejoin="round" stroke-width="30">
+          <path class="pl-line" d="M140 262h64"/>
+          <path class="pl-line l2" d="M168 310h86"/>
+          <path class="pl-line l3" d="M196 214h58"/>
+          <path class="pl-chev" d="M300 200l64 62-64 62"/>
+        </g>
+      </svg>
+    </div>
+    <div class="pl-name">Drive <span class="grad-text">to</span> MEGA</div>
+    <div class="pl-bar"><i></i></div>
   </div>
-
-  <div class="grid">
-    <!-- GOOGLE DRIVE -->
-    <section class="card pane" id="drivePane">
-      <div class="pane-h">
-        <h2><svg class="ic" viewBox="0 0 24 24"><path fill="#0f9d58" d="M8.2 3h7.6l6.2 10.7h-7.6z"/><path fill="#4285f4" d="M2 13.7 5.8 20.3h12.4l3.8-6.6H9.6z"/><path fill="#ffc107" d="M8.2 3 2 13.7l3.8 6.6L12 9.6z"/></svg>Google Drive <span class="badge" id="gBadge">Not connected</span></h2>
-        <div class="sp"></div>
-        <button class="btn sm" id="btnGoogleOut" hidden>Disconnect</button>
-      </div>
-      <div id="driveBody" style="display:flex;flex-direction:column;flex:1;min-height:0"></div>
-    </section>
-
-    <!-- MEGA -->
-    <section class="card pane" id="megaPane">
-      <div class="pane-h">
-        <h2><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="var(--mega)"/><path fill="#fff" d="M7 16.5V8.2c0-.3.4-.5.6-.2l4.4 4.4 4.4-4.4c.2-.3.6-.1.6.2v8.3h-2v-4.8l-3 3-3-3v4.8z"/></svg>MEGA <span class="badge" id="mBadge">Not connected</span></h2>
-        <div class="sp"></div>
-        <span id="mQuota" class="stats" hidden></span>
-        <button class="btn sm" id="btnMegaOut" hidden>Log out</button>
-      </div>
-      <div id="megaBody" style="display:flex;flex-direction:column;flex:1;min-height:0"></div>
-    </section>
-  </div>
-
-  <section class="card" style="margin-top:16px">
-    <div class="bar">
-      <div class="stats" id="selSummary">Nothing selected</div>
-      <div class="sp"></div>
-      <label class="opt">Google Docs as
-        <select id="optExport">
-          <option value="office">Word / Excel / PowerPoint</option>
-          <option value="pdf">PDF</option>
-          <option value="skip">Skip them</option>
-        </select>
-      </label>
-      <label class="opt">If file exists
-        <select id="optExists">
-          <option value="skip">Skip</option>
-          <option value="copy">Upload anyway</option>
-        </select>
-      </label>
-      <label class="opt">Parallel
-        <select id="optParallel"><option>1</option><option selected>2</option><option>3</option><option>4</option></select>
-      </label>
-      <button class="btn primary" id="btnTransfer" disabled>Transfer to MEGA →</button>
-    </div>
-  </section>
-
-  <section class="card queue" id="queueCard" hidden>
-    <div class="qhead">
-      <h2>Transfers</h2>
-      <span class="stats" id="qStats"></span>
-      <div class="sp"></div>
-      <button class="btn sm" id="btnRetry" hidden>Retry failed</button>
-      <button class="btn sm" id="btnCancel">Cancel</button>
-      <button class="btn sm" id="btnClear">Clear finished</button>
-    </div>
-    <div style="padding-top:12px"><div class="overall"><i id="overallBar"></i></div></div>
-    <div class="qlist" id="qList"></div>
-  </section>
-
-  <footer>Everything runs in this browser tab. Files stream from Google straight into MEGA's end-to-end encryption — nothing is stored on any server in between. Keep this tab open while transfers run.</footer>
 </div>
 
-<dialog id="dlgSettings">
-  <div class="dlg-h">Google sign-in setup</div>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Drive to MEGA home"><img src="/assets/icons/logo.svg" alt="" width="32" height="32">Drive <span class="grad-text">to</span> MEGA</a>
+    <nav class="nav" aria-label="Site">
+      <a href="#workspace">App</a>
+      <a href="#how">How it works</a>
+      <a href="#features">Features</a>
+      <a href="#security">Security</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="sp"></div>
+    <span class="net" id="netBadge" hidden>● Offline</span>
+    <button class="btn sm" id="btnInstall" hidden>
+      <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 4v11m0 0-4-4m4 4 4-4M5 19h14"/></svg>Install app
+    </button>
+    <button class="btn ghost sm icon" id="btnShortcuts" title="Keyboard shortcuts (?)" aria-label="Keyboard shortcuts">
+      <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M7 10h.01M11 10h.01M15 10h.01M8 14h8"/></svg>
+    </button>
+    <button class="btn ghost sm icon" id="btnTheme" title="Toggle theme" aria-label="Toggle light or dark theme">
+      <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 0 18V3z"/><circle cx="12" cy="12" r="8.2" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+    </button>
+    <button class="btn ghost sm icon" id="btnSettings" title="Settings" aria-label="Settings">
+      <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg>
+    </button>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <h1>Copy <span class="grad-text">Google Drive to MEGA</span> straight from your browser</h1>
+      <p class="lead">Pick files or whole folders, choose a MEGA folder, press transfer. Everything streams through your own browser into MEGA's end-to-end encryption — no server, no sign-up, no install.</p>
+      <div class="pills">
+        <span class="pill"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="m5 12 5 5 9-10"/></svg>100% free &amp; open source</span>
+        <span class="pill"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="m5 12 5 5 9-10"/></svg>No server in between</span>
+        <span class="pill"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="m5 12 5 5 9-10"/></svg>Read-only Google access</span>
+        <span class="pill"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="m5 12 5 5 9-10"/></svg>Installable app</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap workspace" id="workspace" data-tab="drive">
+    <div class="banner" id="renewBanner" hidden role="alert">
+      <span>⏳ Your Google session expired or is about to. New transfers are paused until you renew it.</span>
+      <div class="sp"></div>
+      <button class="btn primary sm" id="btnRenew">Renew Google session</button>
+    </div>
+    <div class="banner info" id="offlineBanner" hidden role="status">
+      <span>📡 You're offline. The queue is paused and will resume automatically when you're back online.</span>
+    </div>
+    <noscript><div class="banner">Drive to MEGA runs entirely in your browser and needs JavaScript enabled.</div></noscript>
+
+    <div class="grid">
+      <section class="card pane" id="drivePane" aria-labelledby="driveTitle">
+        <div class="pane-h">
+          <h2 id="driveTitle"><span class="svc"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path fill="#0f9d58" d="M8.2 3h7.6l6.2 10.7h-7.6z"/><path fill="#4285f4" d="M2 13.7 5.8 20.3h12.4l3.8-6.6H9.6z"/><path fill="#ffc107" d="M8.2 3 2 13.7l3.8 6.6L12 9.6z"/></svg></span>Google Drive <span class="badge" id="gBadge">Not connected</span></h2>
+          <div class="sp"></div>
+          <div class="who" id="gWho" hidden></div>
+          <button class="btn sm" id="btnGoogleOut" hidden>Disconnect</button>
+        </div>
+        <div id="driveBody" class="pane-body"></div>
+      </section>
+
+      <section class="card pane" id="megaPane" aria-labelledby="megaTitle">
+        <div class="pane-h">
+          <h2 id="megaTitle"><span class="svc"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#d9272e"/><path fill="#fff" d="M7 16.5V8.2c0-.3.4-.5.6-.2l4.4 4.4 4.4-4.4c.2-.3.6-.1.6.2v8.3h-2v-4.8l-3 3-3-3v4.8z"/></svg></span>MEGA <span class="badge" id="mBadge">Not connected</span></h2>
+          <div class="sp"></div>
+          <div class="quota" id="mQuota" hidden><span class="qbar"><i id="mQuotaBar"></i></span><span id="mQuotaText"></span></div>
+          <button class="btn sm" id="btnMegaOut" hidden>Log out</button>
+        </div>
+        <div id="megaBody" class="pane-body"></div>
+      </section>
+    </div>
+
+    <div class="actions">
+      <div class="card">
+        <div class="sel-sum" aria-live="polite">
+          <b id="selCount">Nothing selected</b>
+          <span id="selDest">Select files on the left, a destination on the right.</span>
+        </div>
+        <button class="btn ghost sm" id="btnClearSel" hidden>Clear</button>
+        <div class="sp"></div>
+        <button class="btn ghost sm icon only-m" id="btnOpts" aria-expanded="false" aria-controls="opts" title="Transfer options" aria-label="Transfer options">
+          <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M4 7h10m4 0h2M4 17h4m4 0h8"/><circle cx="16" cy="7" r="2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="10" cy="17" r="2" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+        </button>
+        <div class="opts" id="opts">
+          <label class="opt">Google Docs
+            <select id="optExport">
+              <option value="office">→ Office</option>
+              <option value="pdf">→ PDF</option>
+              <option value="skip">Skip</option>
+            </select>
+          </label>
+          <label class="opt">If exists
+            <select id="optExists">
+              <option value="skip">Skip</option>
+              <option value="rename">Keep both</option>
+              <option value="copy">Upload anyway</option>
+            </select>
+          </label>
+          <label class="opt">Parallel
+            <select id="optParallel"><option>1</option><option>2</option><option>3</option><option>4</option><option>6</option></select>
+          </label>
+        </div>
+        <button class="btn brand lg go" id="btnTransfer" disabled>Transfer to MEGA
+          <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6 6 6-6 6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="card mq-empty" id="mqEmpty"><div class="empty"><b>No transfers yet</b>Select files in Drive, pick a MEGA folder, then tap Transfer.</div></div>
+
+    <section class="card queue" id="queueCard" hidden aria-labelledby="qTitle">
+      <div class="qhead">
+        <h2 id="qTitle">Transfers</h2>
+        <span class="stats" id="qStats" aria-live="polite"></span>
+        <div class="sp"></div>
+        <button class="btn sm" id="btnPause">Pause</button>
+        <button class="btn sm" id="btnRetry" hidden>Retry failed</button>
+        <button class="btn sm danger" id="btnCancel">Cancel all</button>
+        <button class="btn sm" id="btnClear">Clear finished</button>
+        <button class="btn sm icon" id="btnExport" title="Download transfer log (CSV)" aria-label="Download transfer log as CSV">
+          <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 4v11m0 0-4-4m4 4 4-4M5 19h14"/></svg>
+        </button>
+      </div>
+      <div class="overall"><i id="overallBar"></i></div>
+      <div class="chips" id="qChips" role="toolbar" aria-label="Filter transfers"></div>
+      <div class="qlist" id="qList"></div>
+    </section>
+  </div>
+
+  <div class="marketing">
+    <section class="section" id="how">
+      <div class="wrap">
+        <h2>How it works</h2>
+        <p class="sub">Three steps. Your browser does the work, so nothing — not files, not passwords — ever touches a third-party server.</p>
+        <div class="steps">
+          <div class="card step"><h3>Connect Google Drive</h3><p>Sign in with Google and grant <b>read-only</b> access. Browse My Drive, Shared with me, Starred or Shared drives.</p></div>
+          <div class="card step"><h3>Log in to MEGA</h3><p>Your password is used locally to derive MEGA's encryption key — supports two-factor authentication. Pick or create a destination folder.</p></div>
+          <div class="card step"><h3>Transfer</h3><p>Select files or entire folders and press transfer. Folder structure is recreated and each file is streamed and encrypted chunk by chunk.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="features">
+      <div class="wrap">
+        <h2>Everything you need for a smooth move</h2>
+        <p class="sub">Built for big libraries and flaky connections.</p>
+        <div class="feats">
+          <div class="card feat"><div class="fi"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div><h3>Whole folders</h3><p>Recursively copies folders and keeps the structure. Existing MEGA folders are reused, shortcuts are followed, loops are detected.</p></div>
+          <div class="card feat"><div class="fi"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M4 12a8 8 0 0 1 14-5.3L20 9M20 4v5h-5M20 12a8 8 0 0 1-14 5.3L4 15m0 5v-5h5"/></svg></div><h3>Smart retries</h3><p>Rate limits, network blips and server hiccups are retried automatically with back-off. Pause, resume, retry or remove any item.</p></div>
+          <div class="card feat"><div class="fi"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M8 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-5-5H8zm6 0v5h5M8 13h8M8 17h5"/></svg></div><h3>Google Docs export</h3><p>Docs, Sheets, Slides and Drawings are exported to Office formats or PDF — or skipped if you prefer.</p></div>
+          <div class="card feat"><div class="fi"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4M12 3l8 3v6c0 5-3.4 8.4-8 9-4.6-.6-8-4-8-9V6z"/></svg></div><h3>No duplicates</h3><p>Files already in the destination are skipped, or keep both copies with automatic renaming. You choose.</p></div>
+          <div class="card feat"><div class="fi"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 3h8a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/></svg></div><h3>Installable app</h3><p>Add it to your home screen or desktop. Keeps the screen awake while transferring and notifies you when the queue finishes.</p></div>
+          <div class="card feat"><div class="fi"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M11 3a8 8 0 1 0 0 16 8 8 0 0 0 0-16zm10 18-4.3-4.3"/></svg></div><h3>Search &amp; sort</h3><p>Search all of Drive, filter the current folder, sort by name, size or date, and shift-click to select ranges.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="security">
+      <div class="wrap">
+        <h2>Private by design</h2>
+        <p class="sub">There is no backend to hack, log or leak. The whole app is a static page you can read in full on GitHub.</p>
+        <div class="feats">
+          <div class="card feat"><h3>Read-only Google access</h3><p>Uses the <code>drive.readonly</code> scope. The access token lives in memory only, expires within an hour and is revoked when you disconnect.</p></div>
+          <div class="card feat"><h3>Password never stored</h3><p>Your MEGA password is turned into a key in your browser and then discarded. It's never saved, logged, or sent anywhere but MEGA.</p></div>
+          <div class="card feat"><h3>Locked-down page</h3><p>A strict Content Security Policy allows only Google and MEGA APIs, with no inline scripts and no third-party CDNs. The MEGA library is pinned with Subresource Integrity.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section faq" id="faq">
+      <div class="wrap">
+        <h2>Frequently asked questions</h2>
+        <p class="sub">Still stuck? <a href="https://github.com/DriveToMega/DriveToMega.github.io/issues" rel="noopener">Open an issue on GitHub</a>.</p>
+        <div class="card">
+          <details><summary>Is Drive to MEGA free?</summary><p>Yes. It's free and open source, with no account, no limits and no ads. You only need a Google account and a MEGA account.</p></details>
+          <details><summary>Do my files pass through your server?</summary><p>No — there is no server. Files stream from Google's API into your browser and are encrypted by MEGA's library in your browser before upload. Your own internet connection is used for both the download and the upload.</p></details>
+          <details><summary>Is my MEGA password stored?</summary><p>No. It's only used in your browser to derive MEGA's login key and is never saved or sent anywhere except MEGA.</p></details>
+          <details><summary>Can it change or delete my Google Drive files?</summary><p>No. It requests read-only Drive access, so it can list and download files but never modify or delete them.</p></details>
+          <details><summary>What happens to Google Docs, Sheets and Slides?</summary><p>They're exported to Word, Excel and PowerPoint (or PDF), or skipped — your choice. Google limits exports to about 10&nbsp;MB per file.</p></details>
+          <details><summary>Can I close the tab while it transfers?</summary><p>No. Transfers run in your browser, so keep the tab or app open until the queue finishes. The app keeps your screen awake and can notify you when it's done.</p></details>
+          <details><summary>My Google session expired mid-transfer. Did I lose progress?</summary><p>No. Google sign-ins last about an hour. When yours runs out the queue pauses and a "Renew" button appears — one click and it carries on where it left off.</p></details>
+          <details><summary>Why does Google say the app isn't verified?</summary><p>Self-hosted copies use your own Google Cloud project, which stays in "Testing" mode for personal use. Only the test users you add can sign in, and the warning is expected.</p></details>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <a class="brand" href="/"><img src="/assets/icons/logo.svg" alt="" width="24" height="24" loading="lazy">Drive to MEGA</a>
+    <div class="sp"></div>
+    <nav aria-label="Footer">
+      <a href="/privacy.html">Privacy</a>
+      <a href="/terms.html">Terms</a>
+      <a href="https://github.com/DriveToMega/DriveToMega.github.io" rel="noopener">Source code</a>
+      <a href="https://github.com/DriveToMega/DriveToMega.github.io/security/policy" rel="noopener">Report a vulnerability</a>
+    </nav>
+    <p class="disclaimer">Drive to MEGA is an independent open-source project, not affiliated with or endorsed by Google LLC or MEGA Limited. Google Drive is a trademark of Google LLC; MEGA is a trademark of MEGA Limited.</p>
+  </div>
+</footer>
+
+<nav class="mtabs" id="mtabs" aria-label="App sections">
+  <button data-tab="drive" class="active"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M8.2 3h7.6l6.2 10.7-3.8 6.6H5.8L2 13.7z"/></svg>Drive</button>
+  <button data-tab="mega"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M8 16V8.5l4 4 4-4V16"/></svg>MEGA</button>
+  <button data-tab="queue"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M4 6h16M4 12h16M4 18h10"/></svg>Transfers<span class="cnt" id="mtabCount" hidden></span></button>
+</nav>
+
+<!-- Settings -->
+<dialog id="dlgSettings" aria-labelledby="setTitle">
+  <div class="dlg-h" id="setTitle">Settings</div>
   <div class="dlg-b">
-    <p class="hint" style="margin-top:0">To read your Drive, this page needs a Google OAuth Client ID that you create once (free):</p>
-    <ol>
-      <li>Open <b>Google Cloud Console → APIs &amp; Services</b> and enable the <b>Google Drive API</b>.</li>
-      <li>Configure the <b>OAuth consent screen</b> (External, Testing) and add your Gmail as a test user.</li>
-      <li>Create <b>Credentials → OAuth client ID → Web application</b>.</li>
-      <li>Under <b>Authorized JavaScript origins</b> add: <code id="originHint"></code></li>
-      <li>Paste the Client ID below.</li>
-    </ol>
+    <h3>Google sign-in</h3>
+    <p class="hint" id="cidSource"></p>
+    <details id="cidHelp">
+      <summary class="hint">How do I get a Client ID?</summary>
+      <ol>
+        <li>Open <b>Google Cloud Console → APIs &amp; Services</b> and enable the <b>Google Drive API</b>.</li>
+        <li>Configure the <b>OAuth consent screen</b> (External, Testing) and add your Gmail as a test user.</li>
+        <li>Create <b>Credentials → OAuth client ID → Web application</b>.</li>
+        <li>Under <b>Authorized JavaScript origins</b> add <code id="originHint"></code></li>
+        <li>Paste the Client ID below. No client secret is needed — never paste one here.</li>
+      </ol>
+    </details>
     <div class="field">
       <label for="inClientId">OAuth Client ID</label>
-      <input id="inClientId" placeholder="1234567890-abc...apps.googleusercontent.com" autocomplete="off" spellcheck="false">
+      <input id="inClientId" placeholder="1234567890-abc123.apps.googleusercontent.com" autocomplete="off" spellcheck="false" autocapitalize="off" inputmode="url">
     </div>
+    <h3>Transfers</h3>
+    <div class="field">
+      <label for="inConn">Connections per MEGA upload</label>
+      <select id="inConn"><option>1</option><option>2</option><option>4</option><option>6</option><option>8</option></select>
+    </div>
+    <label class="switch"><span><b>Notify me when done</b><small>System notification when the queue finishes in the background.</small></span><input type="checkbox" id="inNotify"></label>
+    <label class="switch"><span><b>Keep screen awake</b><small>Stops your device sleeping while transfers run.</small></span><input type="checkbox" id="inWake"></label>
+    <h3>Appearance</h3>
+    <div class="field">
+      <label for="inTheme">Theme</label>
+      <select id="inTheme"><option value="">Match system</option><option value="light">Light</option><option value="dark">Dark</option></select>
+    </div>
+    <h3>Privacy</h3>
+    <p class="hint">Only your preferences (and a Client ID, if you entered one) are saved on this device. Tokens and passwords are kept in memory and gone when you close the page.</p>
+    <button class="btn sm danger" id="btnReset">Erase all local data</button>
+    <p class="hint" id="iosHint" hidden>To install on iPhone or iPad: tap <b>Share</b> then <b>Add to Home Screen</b>.</p>
   </div>
   <div class="dlg-f">
     <button class="btn" id="dlgCancel">Cancel</button>
@@ -231,567 +375,38 @@ footer{margin-top:22px;color:var(--muted);font-size:12px;text-align:center}
   </div>
 </dialog>
 
-<div class="toast" id="toast"></div>
-
-<script src="https://accounts.google.com/gsi/client" async defer></script>
-<script src="https://cdn.jsdelivr.net/npm/megajs@1.3.10/dist/main.browser-umd.js"></script>
-<script>
-(() => {
-'use strict';
-
-/* ---------------- helpers ---------------- */
-const $ = s => document.querySelector(s);
-const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const store = {
-  get(k){ try { return localStorage.getItem(k); } catch { return null; } },
-  set(k,v){ try { localStorage.setItem(k,v); } catch {} }
-};
-function fmtBytes(n){
-  if (n == null || isNaN(n)) return '—';
-  const u = ['B','KB','MB','GB','TB']; let i = 0; n = Number(n);
-  while (n >= 1024 && i < u.length - 1){ n /= 1024; i++; }
-  return (i ? n.toFixed(n < 10 ? 1 : 0) : n) + ' ' + u[i];
-}
-function toast(msg, ms = 3200){
-  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
-  clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('show'), ms);
-}
-const sleep = ms => new Promise(r => setTimeout(r, ms));
-
-/* theme */
-const applyTheme = t => { if (t) document.documentElement.dataset.theme = t; else delete document.documentElement.dataset.theme; };
-applyTheme(store.get('d2m-theme'));
-$('#btnTheme').onclick = () => {
-  const dark = document.documentElement.dataset.theme
-    ? document.documentElement.dataset.theme === 'dark'
-    : matchMedia('(prefers-color-scheme: dark)').matches;
-  const next = dark ? 'light' : 'dark'; applyTheme(next); store.set('d2m-theme', next);
-};
-
-/* ---------------- icons ---------------- */
-const IC = {
-  folder: '<svg class="ic" viewBox="0 0 24 24"><path fill="#f2b33d" d="M3 6.5A1.5 1.5 0 0 1 4.5 5h4.6l2 2h8.4A1.5 1.5 0 0 1 21 8.5v9a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 17.5z"/></svg>',
-  drive: '<svg class="ic" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2" fill="#4285f4"/><circle cx="17" cy="12" r="1.3" fill="#fff"/></svg>',
-  file: '<svg class="ic" viewBox="0 0 24 24"><path fill="var(--muted)" opacity=".55" d="M6 2.5h8l5 5v13a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 5 20.5V4A1.5 1.5 0 0 1 6.5 2.5z"/><path fill="var(--panel)" opacity=".6" d="M14 2.5v5h5"/></svg>',
-  doc: c => `<svg class="ic" viewBox="0 0 24 24"><path fill="${c}" d="M6.5 2.5h8l5 5v13a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 5 20.5V4a1.5 1.5 0 0 1 1.5-1.5z"/><path fill="#fff" opacity=".8" d="M8 12h8v1.4H8zm0 3h8v1.4H8zm0 3h5v1.4H8z"/></svg>`
-};
-function iconFor(f){
-  if (f.mimeType === FOLDER) return IC.folder;
-  if (f.mimeType === 'application/vnd.google-apps.document') return IC.doc('#4285f4');
-  if (f.mimeType === 'application/vnd.google-apps.spreadsheet') return IC.doc('#0f9d58');
-  if (f.mimeType === 'application/vnd.google-apps.presentation') return IC.doc('#f4b400');
-  return IC.file;
-}
-
-/* ---------------- Google Drive ---------------- */
-const FOLDER = 'application/vnd.google-apps.folder';
-const SCOPE = 'https://www.googleapis.com/auth/drive.readonly';
-const EXPORTS = {
-  'application/vnd.google-apps.document':     { office: ['application/vnd.openxmlformats-officedocument.wordprocessingml.document','.docx'] },
-  'application/vnd.google-apps.spreadsheet':  { office: ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','.xlsx'] },
-  'application/vnd.google-apps.presentation': { office: ['application/vnd.openxmlformats-officedocument.presentationml.presentation','.pptx'] },
-  'application/vnd.google-apps.drawing':      { office: ['image/png','.png'] },
-  'application/vnd.google-apps.script':       { office: ['application/vnd.google-apps.script+json','.json'] },
-};
-
-const G = {
-  token: null, expiry: 0, client: null, clientId: store.get('d2m-client-id') || '',
-  path: [{ id: 'root', name: 'My Drive' }], view: 'mine',
-  items: [], selected: new Map(), loading: false, error: ''
-};
-
-function waitForGis(){
-  return new Promise((res, rej) => {
-    const t0 = Date.now();
-    (function poll(){
-      if (window.google?.accounts?.oauth2) return res();
-      if (Date.now() - t0 > 15000) return rej(new Error('Google sign-in library failed to load. Check your connection or ad-blocker.'));
-      setTimeout(poll, 150);
-    })();
-  });
-}
-
-async function googleAuth(interactive = true){
-  if (!G.clientId){ openSettings(); throw new Error('Add your Google OAuth Client ID first.'); }
-  await waitForGis();
-  return new Promise((resolve, reject) => {
-    G.client = google.accounts.oauth2.initTokenClient({
-      client_id: G.clientId, scope: SCOPE,
-      callback: r => {
-        if (r.error){ reject(new Error(r.error_description || r.error)); return; }
-        G.token = r.access_token;
-        G.expiry = Date.now() + (Number(r.expires_in) || 3600) * 1000;
-        $('#renewBanner').classList.remove('show');
-        resolve();
-      },
-      error_callback: e => reject(new Error(e?.message || (e?.type === 'popup_closed' ? 'Sign-in window was closed.' : 'Google sign-in failed.')))
-    });
-    G.client.requestAccessToken({ prompt: G.token ? '' : (interactive ? 'consent' : '') });
-  });
-}
-
-async function gfetch(url, opts = {}){
-  const r = await fetch(url, { ...opts, headers: { ...(opts.headers||{}), Authorization: 'Bearer ' + G.token } });
-  if (r.status === 401){ G.expiry = 0; showRenew(); throw new Error('Google session expired — renew and retry.'); }
-  if (!r.ok){
-    let msg = r.status + ' ' + r.statusText;
-    try { const j = await r.json(); msg = j.error?.message || msg; } catch {}
-    throw new Error('Google Drive: ' + msg);
-  }
-  return r;
-}
-
-async function listDrive(folder){
-  const p = new URLSearchParams({
-    pageSize: '1000', supportsAllDrives: 'true', includeItemsFromAllDrives: 'true',
-    fields: 'nextPageToken,files(id,name,mimeType,size,modifiedTime,driveId,shortcutDetails)',
-    orderBy: 'folder,name_natural'
-  });
-  if (folder.id === 'shared') p.set('q', 'sharedWithMe = true and trashed = false');
-  else p.set('q', `'${folder.id}' in parents and trashed = false`);
-  if (folder.driveId){ p.set('corpora', 'drive'); p.set('driveId', folder.driveId); }
-  let out = [], token;
-  do {
-    if (token) p.set('pageToken', token);
-    const j = await (await gfetch('https://www.googleapis.com/drive/v3/files?' + p)).json();
-    out = out.concat(j.files || []); token = j.nextPageToken;
-  } while (token);
-  // resolve shortcuts to their targets so they transfer as the real file/folder
-  return out.map(f => f.shortcutDetails
-    ? { ...f, id: f.shortcutDetails.targetId, mimeType: f.shortcutDetails.targetMimeType, shortcut: true, size: undefined }
-    : f);
-}
-
-async function listSharedDrives(){
-  let out = [], token;
-  do {
-    const p = new URLSearchParams({ pageSize: '100' }); if (token) p.set('pageToken', token);
-    const j = await (await gfetch('https://www.googleapis.com/drive/v3/drives?' + p)).json();
-    out = out.concat((j.drives || []).map(d => ({ id: d.id, name: d.name, mimeType: FOLDER, driveId: d.id, isDrive: true })));
-    token = j.nextPageToken;
-  } while (token);
-  return out;
-}
-
-async function loadDrive(){
-  const cur = G.path[G.path.length - 1];
-  G.loading = true; G.error = ''; renderDrive();
-  try {
-    if (cur.id === 'drives') G.items = await listSharedDrives();
-    else G.items = await listDrive(cur);
-  } catch (e){ G.error = e.message; G.items = []; }
-  G.loading = false; renderDrive();
-}
-
-function setView(v){
-  G.view = v;
-  G.path = v === 'mine' ? [{ id:'root', name:'My Drive' }]
-         : v === 'shared' ? [{ id:'shared', name:'Shared with me' }]
-         : [{ id:'drives', name:'Shared drives' }];
-  loadDrive();
-}
-
-function renderDrive(){
-  const body = $('#driveBody');
-  $('#gBadge').textContent = G.token ? 'Connected' : 'Not connected';
-  $('#gBadge').classList.toggle('on', !!G.token);
-  $('#btnGoogleOut').hidden = !G.token;
-  if (!G.token){
-    body.innerHTML = `<div class="empty" style="margin:auto"><b>Connect Google Drive</b>
-      Read-only access — this page can see and download your files, never change them.<br>
-      <button class="btn primary" id="btnGoogle">Sign in with Google</button>
-      ${G.clientId ? '' : '<div class="hint" style="margin-top:10px">First time? You’ll be asked for an OAuth Client ID.</div>'}</div>`;
-    $('#btnGoogle').onclick = async () => {
-      try { await googleAuth(true); setView('mine'); } catch (e){ toast(e.message); }
-    };
-    updateSummary(); return;
-  }
-  const crumbs = G.path.map((p, i) => `<button data-i="${i}">${esc(p.name)}</button>`).join('<span class="sep">/</span>');
-  const files = G.items;
-  const allSel = files.length && files.every(f => G.selected.has(f.id));
-  let list;
-  if (G.loading) list = `<div class="empty"><span class="spin"></span></div>`;
-  else if (G.error) list = `<div class="empty"><b>Couldn’t load</b>${esc(G.error)}<br><button class="btn sm" id="gRetry">Try again</button></div>`;
-  else if (!files.length) list = `<div class="empty">This folder is empty.</div>`;
-  else list = files.map((f, i) => {
-    const isFolder = f.mimeType === FOLDER;
-    const meta = isFolder ? (f.isDrive ? 'shared drive' : 'folder') : (f.size ? fmtBytes(f.size) : (EXPORTS[f.mimeType] ? 'Google file' : '—'));
-    return `<div class="row ${isFolder?'folder':''} ${G.selected.has(f.id)?'sel':''}" data-i="${i}">
-      <input type="checkbox" ${G.selected.has(f.id)?'checked':''} aria-label="Select ${esc(f.name)}">
-      ${f.isDrive ? IC.drive : iconFor(f)}
-      <span class="name" title="${esc(f.name)}">${esc(f.name)}${f.shortcut?' <span class="badge">shortcut</span>':''}</span>
-      <span class="meta">${meta}</span></div>`;
-  }).join('');
-
-  body.innerHTML = `
-    <div class="tabs">
-      <button class="tab ${G.view==='mine'?'active':''}" data-v="mine">My Drive</button>
-      <button class="tab ${G.view==='shared'?'active':''}" data-v="shared">Shared with me</button>
-      <button class="tab ${G.view==='drives'?'active':''}" data-v="drives">Shared drives</button>
+<!-- Generic confirm / prompt -->
+<dialog id="dlgAsk" aria-labelledby="askTitle">
+  <form method="dialog">
+    <div class="dlg-h" id="askTitle"></div>
+    <div class="dlg-b"><p id="askText" class="hint"></p>
+      <div class="field" id="askField" hidden><label for="askInput" id="askLabel"></label><input id="askInput" autocomplete="off" maxlength="200"></div>
     </div>
-    <div class="crumbs">${crumbs}</div>
-    <div class="list" id="gList">${list}</div>
-    <div class="pane-f">
-      <label class="opt"><input type="checkbox" id="gAll" ${allSel?'checked':''} ${files.length?'':'disabled'}> Select all here</label>
-      <div class="sp"></div>
-      <span>${files.length} item${files.length===1?'':'s'}</span>
-      <button class="btn ghost sm" id="gRefresh" title="Refresh">↻</button>
-    </div>`;
+    <div class="dlg-f">
+      <button class="btn" value="cancel" id="askCancel">Cancel</button>
+      <button class="btn primary" value="ok" id="askOk">OK</button>
+    </div>
+  </form>
+</dialog>
 
-  body.querySelectorAll('.tab').forEach(b => b.onclick = () => setView(b.dataset.v));
-  body.querySelectorAll('.crumbs button').forEach(b => b.onclick = () => { G.path = G.path.slice(0, +b.dataset.i + 1); loadDrive(); });
-  $('#gRefresh').onclick = loadDrive;
-  $('#gRetry') && ($('#gRetry').onclick = loadDrive);
-  $('#gAll').onchange = e => { files.forEach(f => e.target.checked ? G.selected.set(f.id, f) : G.selected.delete(f.id)); renderDrive(); };
-  body.querySelectorAll('.row').forEach(row => {
-    const f = files[+row.dataset.i];
-    const toggle = () => { G.selected.has(f.id) ? G.selected.delete(f.id) : G.selected.set(f.id, f); renderDrive(); };
-    row.querySelector('input').onchange = toggle;
-    row.querySelector('.name').onclick = () => {
-      if (f.mimeType === FOLDER){ G.path.push({ id: f.id, name: f.name, driveId: f.driveId || G.path[G.path.length-1].driveId }); loadDrive(); }
-      else toggle();
-    };
-  });
-  updateSummary();
-}
+<!-- Shortcuts -->
+<dialog id="dlgKeys" aria-labelledby="keysTitle">
+  <div class="dlg-h" id="keysTitle">Keyboard shortcuts</div>
+  <div class="dlg-b">
+    <div class="keys">
+      <kbd>/</kbd><span>Search Google Drive</span>
+      <kbd>Ctrl</kbd><span>+ <kbd>A</kbd> select everything in the current Drive folder</span>
+      <kbd>Shift</kbd><span>+ click to select a range of files</span>
+      <kbd>Esc</kbd><span>Clear selection / close dialogs</span>
+      <kbd>Backspace</kbd><span>Go up one Drive folder</span>
+      <kbd>T</kbd><span>Start the transfer</span>
+      <kbd>P</kbd><span>Pause or resume the queue</span>
+      <kbd>?</kbd><span>Show this help</span>
+    </div>
+  </div>
+  <div class="dlg-f"><button class="btn primary" id="keysClose">Got it</button></div>
+</dialog>
 
-$('#btnGoogleOut').onclick = () => {
-  if (G.token && window.google?.accounts?.oauth2) google.accounts.oauth2.revoke(G.token, () => {});
-  G.token = null; G.items = []; G.selected.clear(); renderDrive();
-};
-
-function showRenew(){ $('#renewBanner').classList.add('show'); }
-$('#btnRenew').onclick = async () => {
-  try { await googleAuth(false); toast('Google session renewed'); } catch (e){ toast(e.message); }
-};
-async function ensureFreshToken(){
-  // GIS tokens last ~1h and can't be refreshed silently without a click; pause the queue until renewed.
-  while (!G.token || G.expiry - Date.now() < 3 * 60 * 1000){
-    showRenew();
-    if (Q.cancelled) throw new Error('Cancelled');
-    await sleep(1000);
-  }
-}
-
-/* ---------------- MEGA ---------------- */
-const M = { storage: null, path: [], loggingIn: false, error: '', needs2fa: false, email: '' };
-
-async function megaLogin(email, password, code){
-  M.loggingIn = true; M.error = ''; renderMega();
-  try {
-    if (!window.mega?.Storage) throw new Error('MEGA library failed to load. Check your connection or ad-blocker.');
-    const opts = { email, password, keepalive: false, autoload: true };
-    if (code) opts.secondFactorCode = code;
-    const s = new mega.Storage(opts);
-    await s.ready;
-    M.storage = s; M.path = [s.root]; M.needs2fa = false; M.email = email;
-    refreshQuota();
-  } catch (e){
-    const msg = String(e?.message || e);
-    if (/EMFAREQUIRED|-26/.test(msg)){ M.needs2fa = true; M.error = 'Enter the 6-digit code from your authenticator app.'; }
-    else if (code && /EFAILED|EEXPIRED|-9\b/.test(msg)) M.error = 'Login failed — check your password and use the current 2FA code.';
-    else if (/ENOENT|EACCESS|-9\b|-11\b/.test(msg)) M.error = 'Wrong email or password.';
-    else M.error = msg;
-  }
-  M.loggingIn = false; renderMega();
-}
-
-async function refreshQuota(){
-  try {
-    const a = await M.storage.getAccountInfo();
-    const q = $('#mQuota');
-    q.hidden = false;
-    q.innerHTML = `${fmtBytes(a.spaceUsed)} / ${fmtBytes(a.spaceTotal)}`;
-    M.free = a.spaceTotal - a.spaceUsed;
-  } catch {}
-}
-
-const megaChildren = node => (node.children || []).slice().sort((a, b) =>
-  (b.directory - a.directory) || a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' }));
-
-function renderMega(){
-  const body = $('#megaBody');
-  $('#mBadge').textContent = M.storage ? 'Connected' : 'Not connected';
-  $('#mBadge').classList.toggle('on', !!M.storage);
-  $('#btnMegaOut').hidden = !M.storage;
-  if (!M.storage){
-    $('#mQuota').hidden = true;
-    body.innerHTML = `<form class="form" id="megaForm" autocomplete="on">
-      <p class="hint" style="margin-top:0">Your password goes only to MEGA, from this browser. It is never saved.</p>
-      <div class="field"><label for="mEmail">Email</label><input id="mEmail" type="email" required autocomplete="username" value="${esc(M.email)}"></div>
-      <div class="field"><label for="mPass">Password</label><input id="mPass" type="password" required autocomplete="current-password"></div>
-      <div class="field" ${M.needs2fa?'':'hidden'} id="m2faWrap"><label for="m2fa">2FA code</label><input id="m2fa" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="one-time-code"></div>
-      ${M.error ? `<div class="err">${esc(M.error)}</div>` : ''}
-      <button class="btn primary" style="width:100%;justify-content:center" ${M.loggingIn?'disabled':''}>${M.loggingIn?'<span class="spin"></span> Logging in…':'Log in to MEGA'}</button>
-      ${M.needs2fa ? '' : '<div class="hint" style="margin-top:10px;text-align:center"><a href="#" id="show2fa" style="color:var(--muted)">I use two-factor authentication</a></div>'}
-    </form>`;
-    const f = $('#megaForm');
-    f.onsubmit = e => { e.preventDefault(); megaLogin($('#mEmail').value.trim(), $('#mPass').value, $('#m2fa').value.trim()); };
-    $('#show2fa') && ($('#show2fa').onclick = e => { e.preventDefault(); M.needs2fa = true; $('#m2faWrap').hidden = false; e.target.parentElement.remove(); });
-    if (M.needs2fa && !M.loggingIn) setTimeout(() => ($('#mPass').value ? $('#m2fa') : $('#mPass')).focus(), 0);
-    updateSummary(); return;
-  }
-  const cur = M.path[M.path.length - 1];
-  const kids = megaChildren(cur);
-  const crumbs = M.path.map((n, i) => `<button data-i="${i}">${i === 0 ? 'Cloud Drive' : esc(n.name)}</button>`).join('<span class="sep">/</span>');
-  const list = kids.length ? kids.map((n, i) => `<div class="row mrow ${n.directory?'folder':''}" data-i="${i}">
-      ${n.directory ? IC.folder : IC.file}
-      <span class="name" title="${esc(n.name)}">${esc(n.name)}</span>
-      <span class="meta">${n.directory ? '' : fmtBytes(n.size)}</span></div>`).join('')
-    : `<div class="empty">Empty folder — files will land here.</div>`;
-  body.innerHTML = `
-    <div class="crumbs">${crumbs}</div>
-    <div class="list">${list}</div>
-    <div class="pane-f">
-      <span>Destination: <b style="color:var(--text)">${esc(M.path.length === 1 ? 'Cloud Drive' : cur.name)}</b></span>
-      <div class="sp"></div>
-      <button class="btn sm" id="mNew">+ New folder</button>
-      <button class="btn ghost sm" id="mRefresh" title="Refresh">↻</button>
-    </div>`;
-  body.querySelectorAll('.crumbs button').forEach(b => b.onclick = () => { M.path = M.path.slice(0, +b.dataset.i + 1); renderMega(); });
-  body.querySelectorAll('.row.folder .name').forEach(el => el.onclick = () => { M.path.push(kids[+el.closest('.row').dataset.i]); renderMega(); });
-  $('#mNew').onclick = async () => {
-    const name = prompt('New folder name');
-    if (!name?.trim()) return;
-    try { await cur.mkdir(name.trim()); renderMega(); } catch (e){ toast('Could not create folder: ' + e.message); }
-  };
-  $('#mRefresh').onclick = async () => {
-    try { await M.storage.reload(true); M.path = [M.storage.root]; } catch {}
-    renderMega(); refreshQuota();
-  };
-  updateSummary();
-}
-
-$('#btnMegaOut').onclick = () => {
-  try { M.storage?.close(); } catch {}
-  M.storage = null; M.path = []; M.error = ''; M.needs2fa = false; renderMega();
-};
-
-/* ---------------- selection summary ---------------- */
-function updateSummary(){
-  const sel = [...G.selected.values()];
-  const folders = sel.filter(f => f.mimeType === FOLDER).length;
-  const files = sel.length - folders;
-  const bytes = sel.reduce((a, f) => a + (Number(f.size) || 0), 0);
-  $('#selSummary').textContent = sel.length
-    ? `${files} file${files===1?'':'s'}${folders ? ` + ${folders} folder${folders===1?'':'s'}` : ''} selected${bytes ? ' · ' + fmtBytes(bytes) + (folders ? '+' : '') : ''}`
-    : 'Nothing selected';
-  $('#btnTransfer').disabled = !(sel.length && G.token && M.storage) || Q.planning;
-}
-
-/* ---------------- transfer queue ---------------- */
-const Q = { items: [], running: 0, planning: false, cancelled: false, controllers: new Set(), started: 0 };
-
-function exportInfo(f){
-  const mode = $('#optExport').value;
-  const ex = EXPORTS[f.mimeType];
-  if (!f.mimeType.startsWith('application/vnd.google-apps.')) return { kind: 'binary' };
-  if (!ex || mode === 'skip') return { kind: 'skip', why: ex ? 'Google file (skipped)' : 'Not downloadable' };
-  if (mode === 'pdf' && f.mimeType !== 'application/vnd.google-apps.script') return { kind: 'export', mime: 'application/pdf', ext: '.pdf' };
-  return { kind: 'export', mime: ex.office[0], ext: ex.office[1] };
-}
-
-async function megaFolder(parent, name){
-  const existing = (parent.children || []).find(c => c.directory && c.name === name);
-  return existing || await parent.mkdir(name);
-}
-
-async function plan(){
-  const dest = M.path[M.path.length - 1];
-  const sel = [...G.selected.values()];
-  Q.planning = true; Q.cancelled = false; updateSummary();
-  $('#queueCard').hidden = false;
-  const btn = $('#btnTransfer'); const label = btn.innerHTML;
-  btn.innerHTML = '<span class="spin"></span> Scanning folders…';
-  const add = (f, parent, path) => {
-    const info = exportInfo(f);
-    const name = info.kind === 'export' && !f.name.toLowerCase().endsWith(info.ext) ? f.name + info.ext : f.name;
-    Q.items.push({ id: crypto.randomUUID(), file: f, info, name, path, parent,
-      size: Number(f.size) || 0, loaded: 0, status: info.kind === 'skip' ? 'skipped' : 'queued', note: info.why || '' });
-  };
-  const walk = async (folder, megaParent, path, depth) => {
-    if (Q.cancelled) return;
-    if (depth > 40) throw new Error('Folder nesting too deep');
-    const target = await megaFolder(megaParent, folder.name);
-    const kids = await listDrive({ id: folder.id, driveId: folder.driveId });
-    for (const k of kids){
-      if (k.mimeType === FOLDER) await walk({ ...k, driveId: k.driveId || folder.driveId }, target, path + folder.name + '/', depth + 1);
-      else add(k, target, path + folder.name + '/');
-    }
-    renderQueue();
-  };
-  try {
-    for (const f of sel){
-      if (Q.cancelled) break;
-      if (f.mimeType === FOLDER) await walk(f, dest, '', 0);
-      else add(f, dest, '');
-    }
-    G.selected.clear(); renderDrive();
-  } catch (e){ toast('Scan failed: ' + e.message); }
-  Q.planning = false; btn.innerHTML = label; updateSummary();
-  if (M.free != null){
-    const need = Q.items.filter(i => i.status === 'queued').reduce((a, i) => a + i.size, 0);
-    if (need > M.free) toast(`Heads-up: ${fmtBytes(need)} queued but only ${fmtBytes(M.free)} free on MEGA.`, 6000);
-  }
-  renderMega(); pump();
-}
-
-function pump(){
-  const max = +$('#optParallel').value;
-  while (!Q.cancelled && Q.running < max){
-    const next = Q.items.find(i => i.status === 'queued');
-    if (!next) break;
-    if (!Q.started) Q.started = Date.now();
-    Q.running++;
-    next.status = 'active';
-    transferOne(next)
-      .then(() => { next.status = next.status === 'skipped' ? 'skipped' : 'done'; })
-      .catch(e => { if (next.status !== 'skipped'){ next.status = 'error'; next.note = Q.cancelled ? 'Cancelled' : (e?.message || String(e)); } })
-      .finally(() => { Q.running--; renderQueue(); if (Q.running === 0 && !Q.items.some(i => i.status === 'queued')) finished(); else pump(); });
-  }
-  renderQueue();
-}
-
-function finished(){
-  $('#renewBanner').classList.remove('show');
-  const done = Q.items.filter(i => i.status === 'done').length;
-  const err = Q.items.filter(i => i.status === 'error').length;
-  toast(`Transfer finished — ${done} uploaded${err ? `, ${err} failed` : ''}.`, 5000);
-  Q.started = 0; refreshQuota(); renderMega();
-}
-
-async function transferOne(item){
-  await ensureFreshToken();
-  const f = item.file;
-  if ($('#optExists').value === 'skip'){
-    const dup = (item.parent.children || []).find(c => !c.directory && c.name === item.name && (item.info.kind === 'export' || c.size === item.size));
-    if (dup){ item.status = 'skipped'; item.note = 'Already in MEGA'; return; }
-  }
-  const ac = new AbortController(); Q.controllers.add(ac);
-  try {
-    let source, size;
-    if (item.info.kind === 'export'){
-      // Exports have no known size up front, so fetch them whole (Google caps exports at ~10 MB anyway).
-      item.note = 'Exporting…'; renderQueue();
-      const r = await gfetch(`https://www.googleapis.com/drive/v3/files/${f.id}/export?mimeType=${encodeURIComponent(item.info.mime)}`, { signal: ac.signal });
-      const buf = new Uint8Array(await r.arrayBuffer());
-      size = buf.length; item.size = size; item.note = '';
-      source = (async function*(){ yield buf; })();
-    } else {
-      const r = await gfetch(`https://www.googleapis.com/drive/v3/files/${f.id}?alt=media&supportsAllDrives=true&acknowledgeAbuse=false`, { signal: ac.signal });
-      size = item.size || Number(r.headers.get('content-length')) || 0;
-      item.size = size;
-      const reader = r.body.getReader();
-      ac.signal.addEventListener('abort', () => reader.cancel().catch(() => {}));
-      source = (async function*(){ for (;;){ const { done, value } = await reader.read(); if (done) return; yield value; } })();
-    }
-
-    const up = item.parent.upload({ name: item.name, size, maxConnections: 4 });
-    up.on('progress', p => { item.loaded = p.bytesLoaded; scheduleRender(); });
-    let cancelReject;
-    const cancelled = new Promise((_, rej) => { cancelReject = rej; });
-    ac.signal.addEventListener('abort', () => { try { up.destroy(new Error('Cancelled')); } catch {} cancelReject(new Error('Cancelled')); });
-    const failed = new Promise((_, rej) => up.on('error', rej));
-
-    const pumpIn = (async () => {
-      let sent = 0;
-      for await (const chunk of source){
-        if (ac.signal.aborted) throw new Error('Cancelled');
-        sent += chunk.length;
-        if (sent > size) throw new Error('File is larger than Google reported — retry it.');
-        if (!up.write(chunk)) await new Promise(r => up.once('drain', r));
-      }
-      if (sent !== size) throw new Error(`Download ended early (${fmtBytes(sent)} of ${fmtBytes(size)}).`);
-      if (size > 0) up.end(); // zero-byte uploads are ended by the library itself
-    })();
-    pumpIn.catch(() => {}); // surfaced below via Promise.race
-
-    await Promise.race([Promise.all([pumpIn, up.complete]), cancelled, failed]);
-    item.loaded = item.size;
-  } finally {
-    Q.controllers.delete(ac);
-  }
-}
-
-let renderPending = false;
-function scheduleRender(){ if (!renderPending){ renderPending = true; requestAnimationFrame(() => { renderPending = false; renderQueue(); }); } }
-
-function renderQueue(){
-  const items = Q.items;
-  if (!items.length){ $('#queueCard').hidden = true; return; }
-  $('#queueCard').hidden = false;
-  const total = items.filter(i => i.status !== 'skipped').reduce((a, i) => a + i.size, 0);
-  const loaded = items.filter(i => i.status !== 'skipped').reduce((a, i) => a + (i.status === 'done' ? i.size : i.loaded), 0);
-  const count = s => items.filter(i => i.status === s).length;
-  const secs = Q.started ? (Date.now() - Q.started) / 1000 : 0;
-  const speed = secs > 1 ? loaded / secs : 0;
-  const remaining = speed ? (total - loaded) / speed : 0;
-  const eta = remaining > 0 && (Q.running || count('queued'))
-    ? ' · ~' + (remaining > 3600 ? (remaining/3600).toFixed(1) + ' h' : remaining > 60 ? Math.round(remaining/60) + ' min' : Math.round(remaining) + ' s') + ' left' : '';
-  $('#qStats').textContent = `${count('done')}/${items.length - count('skipped')} done · ${fmtBytes(loaded)} of ${fmtBytes(total)}${speed && Q.running ? ' · ' + fmtBytes(speed) + '/s' : ''}${eta}${count('error') ? ' · ' + count('error') + ' failed' : ''}${count('skipped') ? ' · ' + count('skipped') + ' skipped' : ''}`;
-  $('#overallBar').style.width = (total ? loaded / total * 100 : 0) + '%';
-  $('#btnRetry').hidden = !count('error');
-  $('#btnCancel').hidden = !(Q.running || count('queued') || Q.planning);
-  const label = { queued: 'Queued', active: '', done: 'Done', error: 'Failed', skipped: 'Skipped' };
-  // active first, then queued, errors, done
-  const order = { active: 0, error: 1, queued: 2, done: 3, skipped: 4 };
-  const shown = items.slice().sort((a, b) => order[a.status] - order[b.status]).slice(0, 400);
-  $('#qList').innerHTML = shown.map(i => {
-    const pct = i.status === 'done' ? 100 : i.size ? Math.min(100, i.loaded / i.size * 100) : 0;
-    const st = i.status === 'active' ? (i.note || Math.floor(pct) + '%') : label[i.status];
-    return `<div class="qi"><div class="n"><div title="${esc(i.name)}">${esc(i.name)}</div>
-      <small>${esc([i.path, i.size ? fmtBytes(i.size) : '', i.status !== 'active' ? i.note : ''].filter(Boolean).join(' · '))}</small></div>
-      <div class="pbw"><div class="pb"><i style="width:${pct}%;${i.status==='error'?'background:var(--bad)':i.status==='done'?'background:var(--g)':''}"></i></div></div>
-      <div class="st ${i.status}">${esc(st)}</div></div>`;
-  }).join('') + (items.length > shown.length ? `<div class="empty">+ ${items.length - shown.length} more</div>` : '');
-}
-
-$('#btnTransfer').onclick = () => {
-  if (!M.storage) return toast('Log in to MEGA first.');
-  if (!G.token) return toast('Connect Google Drive first.');
-  plan();
-};
-$('#btnCancel').onclick = () => {
-  Q.cancelled = true;
-  Q.controllers.forEach(c => c.abort());
-  Q.items.forEach(i => { if (i.status === 'queued'){ i.status = 'skipped'; i.note = 'Cancelled'; } });
-  renderQueue();
-  setTimeout(() => { Q.cancelled = false; }, 500);
-};
-$('#btnRetry').onclick = () => {
-  Q.cancelled = false;
-  Q.items.forEach(i => { if (i.status === 'error'){ i.status = 'queued'; i.loaded = 0; i.note = ''; } });
-  pump();
-};
-$('#btnClear').onclick = () => {
-  Q.items = Q.items.filter(i => i.status === 'active' || i.status === 'queued' || i.status === 'error');
-  renderQueue();
-};
-$('#optParallel').onchange = pump;
-setInterval(() => { if (Q.running) renderQueue(); }, 1000);
-
-window.addEventListener('beforeunload', e => {
-  if (Q.running || Q.items.some(i => i.status === 'queued')){ e.preventDefault(); e.returnValue = ''; }
-});
-
-/* ---------------- settings ---------------- */
-function openSettings(){
-  $('#originHint').textContent = (location.origin === 'null' || location.protocol === 'file:') ? '(host this page on https:// first)' : location.origin;
-  $('#inClientId').value = G.clientId;
-  $('#dlgSettings').showModal();
-}
-$('#btnSettings').onclick = openSettings;
-$('#dlgCancel').onclick = () => $('#dlgSettings').close();
-$('#dlgSave').onclick = () => {
-  const v = $('#inClientId').value.trim();
-  if (v && !/\.apps\.googleusercontent\.com$/.test(v)){ toast('That doesn’t look like an OAuth Client ID (should end in .apps.googleusercontent.com).'); return; }
-  G.clientId = v; store.set('d2m-client-id', v);
-  G.token = null; $('#dlgSettings').close(); renderDrive(); toast('Saved');
-};
-
-/* boot */
-renderDrive(); renderMega();
-})();
-</script>
+<div class="toasts" id="toasts" aria-live="polite"></div>
 </body>
 </html>

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <mask id="m"><rect width="512" height="512" fill="#fff"/>
+    <g fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="30">
+      <path d="M140 262h64"/><path d="M168 310h86"/><path d="M196 214h58"/><path d="M300 200l64 62-64 62"/></g></mask>
+  <path mask="url(#m)" fill="#fff" d="M150 372c-46 0-82-35-82-80 0-41 31-75 71-79 14-50 59-86 113-86 55 0 101 38 113 90 41 3 79 36 79 78 0 43-35 77-79 77z" transform="translate(-6 -10) scale(1.02)"/>
+</svg>

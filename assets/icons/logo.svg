@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Drive to MEGA">
+  <defs>
+    <linearGradient id="d2m-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#10b981"/>
+      <stop offset=".52" stop-color="#3b6cf6"/>
+      <stop offset="1" stop-color="#e11d48"/>
+    </linearGradient>
+    <linearGradient id="d2m-stream" gradientUnits="userSpaceOnUse" x1="140" y1="0" x2="364" y2="0">
+      <stop offset="0" stop-color="#10b981"/>
+      <stop offset=".55" stop-color="#3b6cf6"/>
+      <stop offset="1" stop-color="#e11d48"/>
+    </linearGradient>
+    <linearGradient id="d2m-shine" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff" stop-opacity=".22"/>
+      <stop offset=".5" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="116" fill="url(#d2m-bg)"/>
+  <rect width="512" height="512" rx="116" fill="url(#d2m-shine)"/>
+  <!-- cloud -->
+  <path fill="#fff" d="M150 372c-46 0-82-35-82-80 0-41 31-75 71-79 14-50 59-86 113-86 55 0 101 38 113 90 41 3 79 36 79 78 0 43-35 77-79 77z"/>
+  <!-- transfer stream: speed lines into a chevron, cut from the cloud -->
+  <g fill="none" stroke="url(#d2m-stream)" stroke-linecap="round" stroke-linejoin="round" stroke-width="30">
+    <path d="M140 262h64"/>
+    <path d="M168 310h86"/>
+    <path d="M196 214h58"/>
+    <path d="M300 200l64 62-64 62"/>
+  </g>
+</svg>
