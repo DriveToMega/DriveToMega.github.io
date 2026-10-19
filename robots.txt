@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /offline.html
+Disallow: /404.html
+
+Sitemap: https://drivetomega.github.io/sitemap.xml

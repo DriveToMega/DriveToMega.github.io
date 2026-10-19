@@ -1,0 +1,5 @@
+Contact: https://github.com/DriveToMega/DriveToMega.github.io/security/advisories/new
+Expires: 2027-10-19T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://drivetomega.github.io/.well-known/security.txt
+Policy: https://github.com/DriveToMega/DriveToMega.github.io/security/policy
