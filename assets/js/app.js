@@ -602,7 +602,8 @@ function renderDrive(){
 }
 
 /* ================================================================== MEGA */
-const M = { storage: null, path: [], loggingIn: false, error: '', needs2fa: false, email: '', free: null, pendingPw: '' };
+const M = { storage: null, path: [], loggingIn: false, error: '', needs2fa: false, email: '', free: null, pendingPw: '',
+  loginSeq: 0, loginAbort: null, loginStarted: 0, step: '', stepSticky: false };
 
 function megaError(e, withCode){
   const msg = String(e?.message || e);
@@ -615,27 +616,107 @@ function megaError(e, withCode){
   return { text: msg };
 }
 
+// MEGA API commands we can name while logging in (megajs gives no progress events of its own).
+const MEGA_STEPS = { us0: 'Contacting MEGA…', us: 'Checking your password…', ug: 'Opening your account…', f: 'Downloading your file list…' };
+
+/** fetch() for megajs: reports login progress, notices MEGA's proof-of-work challenge, supports cancel,
+ *  and patches file-tree responses that megajs 1.3.10 can't parse. */
+function megaFetch(signal){
+  return async (url, init = {}) => {
+    let cmd = '';
+    if (typeof init.body === 'string' && init.body.length < 4096){
+      try { cmd = JSON.parse(init.body)[0]?.a || ''; } catch {}
+      if (MEGA_STEPS[cmd]) setMegaStep(MEGA_STEPS[cmd]);
+    }
+    const sig = init.signal && AbortSignal.any ? AbortSignal.any([init.signal, signal]) : init.signal || signal;
+    const res = await fetch(url, { ...init, signal: sig, credentials: 'omit', referrerPolicy: 'no-referrer' });
+    if (res.headers.get('X-Hashcash')){
+      setMegaStep('MEGA asked this browser to solve an anti-abuse check. This can take a few minutes — keep this tab open.', true);
+      return res;
+    }
+    if (cmd !== 'f' || !res.ok) return res;
+    // megajs calls a.ok.reduce() / iterates a.f unconditionally; MEGA omits them for some accounts,
+    // which throws inside megajs and leaves login hanging forever. Default them to empty arrays.
+    const data = await res.json();
+    const tree = Array.isArray(data) ? data[0] : null;
+    if (tree && typeof tree === 'object'){
+      if (!Array.isArray(tree.ok)) tree.ok = [];
+      if (!Array.isArray(tree.f)) tree.f = [];
+    }
+    return new Response(JSON.stringify(data), { status: res.status, statusText: res.statusText, headers: res.headers });
+  };
+}
+
+/** Rejects if megajs throws somewhere its own promises can't see (otherwise login would spin forever). */
+function megaCrashGuard(){
+  let off;
+  const p = new Promise((_, reject) => {
+    const onErr = ev => {
+      const e = ev.reason || ev.error;
+      if (/megajs/.test(String(e?.stack || '') + (ev.filename || ''))){ ev.preventDefault?.(); reject(err('MEGA library error: ' + (e?.message || 'unknown') + '. Please report this on GitHub.')); }
+    };
+    addEventListener('unhandledrejection', onErr);
+    addEventListener('error', onErr);
+    off = () => { removeEventListener('unhandledrejection', onErr); removeEventListener('error', onErr); };
+  });
+  p.catch(() => {});
+  return { promise: p, off };
+}
+
+function setMegaStep(text, sticky = false){
+  if (!M.loggingIn || (M.stepSticky && !sticky && text !== MEGA_STEPS.f)) return;
+  M.step = text; M.stepSticky = sticky;
+  paintMegaStep();
+}
+function paintMegaStep(){
+  const el = $('#mStep'), btn = $('#mSubmit');
+  if (!el || !M.loggingIn) return;
+  const secs = Math.floor((Date.now() - M.loginStarted) / 1000);
+  el.textContent = M.step + (secs >= 25 && !M.stepSticky && M.step === MEGA_STEPS.f ? ' Large accounts can take a minute or two.' : '');
+  btn.replaceChildren(h('span', { class: 'spin' }), ` Logging in… ${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}`);
+}
+setInterval(paintMegaStep, 1000);
+
+function cancelMegaLogin(){
+  M.loginSeq++; M.loginAbort?.abort();
+  M.loggingIn = false; M.error = 'Login cancelled.';
+  renderMega();
+}
+
 async function megaLogin(email, password, code){
-  M.loggingIn = true; M.error = ''; M.email = email; renderMega();
+  const seq = ++M.loginSeq;
+  M.loginAbort = new AbortController();
+  Object.assign(M, { loggingIn: true, error: '', email, step: 'Loading MEGA library…', stepSticky: false, loginStarted: Date.now() });
+  renderMega();
+  let s;
+  const guard = megaCrashGuard();
   try {
     await loadMega();
-    const opts = { email, password, keepalive: false, autoload: true };
+    // Log in first, then load the tree separately so each phase can be reported.
+    const opts = { email, password, keepalive: false, autoload: false, fetch: megaFetch(M.loginAbort.signal) };
     if (code) opts.secondFactorCode = code;
-    const s = new mega.Storage(opts);
-    await s.ready;
+    s = new mega.Storage(opts);
+    await Promise.race([s.ready, guard.promise]);
+    if (seq !== M.loginSeq) return s.close();
+    setMegaStep(MEGA_STEPS.f);
+    await Promise.race([new Promise((resolve, reject) => s.reload(true, e => e ? reject(e) : resolve())), guard.promise]);
+    if (seq !== M.loginSeq) return s.close();
     M.storage = s; M.path = [s.root]; M.needs2fa = false; M.pendingPw = '';
-    toast('Logged in to MEGA');
+    toast(`Logged in to MEGA · ${Object.keys(s.files).length} items`);
     refreshQuota();
   } catch (e){
+    if (seq !== M.loginSeq) return;
+    try { s?.close(); } catch {}
     const m = megaError(e, !!code);
     // MEGA asks for the 2FA code only after checking the password; hold it in memory for that one retry.
     M.pendingPw = m.need2fa && !code ? password : '';
     if (m.need2fa) M.needs2fa = true;
     M.error = m.text;
   } finally {
-    M.loggingIn = false;
+    guard.off();
+    if (seq === M.loginSeq) M.loggingIn = false;
   }
-  renderMega();
+  if (seq === M.loginSeq) renderMega();
 }
 
 async function refreshQuota(){
@@ -672,7 +753,9 @@ function renderMegaLogin(body){
     M.error ? h('div', { class: 'err', role: 'alert' }, M.error) : null,
     h('button', { class: 'btn primary lg', type: 'submit', disabled: M.loggingIn, id: 'mSubmit' },
       M.loggingIn ? [h('span', { class: 'spin' }), ' Logging in…'] : 'Log in to MEGA'),
-    M.needs2fa ? null : h('div', { class: 'hint center-text' }, toggle2fa),
+    M.loggingIn ? h('p', { class: 'hint center-text', id: 'mStep', role: 'status', 'aria-live': 'polite' }, M.step) : null,
+    M.loggingIn ? h('div', { class: 'center-text' }, h('button', { class: 'btn ghost sm', type: 'button', onclick: cancelMegaLogin }, 'Cancel')) : null,
+    M.needs2fa || M.loggingIn ? null : h('div', { class: 'hint center-text' }, toggle2fa),
     h('p', { class: 'hint' }, 'No account? ', h('a', { href: 'https://mega.nz/register', target: '_blank', rel: 'noopener noreferrer' }, 'Create one free on mega.nz'), '.'));
   $('#mSubmit', form).classList.add('full');
   form.addEventListener('submit', e => {
@@ -684,6 +767,7 @@ function renderMegaLogin(body){
     megaLogin(email.value.trim(), pw, code.value.trim());
   });
   body.replaceChildren(form);
+  paintMegaStep();
   if (M.needs2fa && !M.loggingIn) setTimeout(() => (kept ? code : pass).focus(), 0);
 }
 
