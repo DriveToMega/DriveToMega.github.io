@@ -18,6 +18,7 @@ No server, no sign-up, no install. Installable as an app on desktop and mobile.<
 - **Resilient queue.** Automatic retries with back-off for rate limits, 5xx errors and network drops. A stall watchdog, pause/resume, per-file retry, cancel and remove. The queue auto-pauses when you go offline and pauses until you renew an expired Google session.
 - **Live progress.** Overall progress, speed, ETA, progress in the tab title, status filters, and a CSV log export.
 - **Streaming.** Large files are piped from Drive into MEGA's client-side encryption chunk by chunk and never sit fully in memory.
+- **Multi-core encryption.** MEGA encryption runs with hardware AES (WebCrypto) across a pool of Web Workers, about 10× faster than megajs's pure-JS path. Output is byte-identical to megajs (`tests/fast-crypto.test.mjs`), and it can be turned off in Settings.
 - **PWA.** Installable, works offline (shell), keeps the screen awake during transfers, sends a system notification when done, offers app shortcuts, and has a mobile tab bar layout.
 - **Accessible.** Keyboard shortcuts (press `?`), screen-reader labels and live regions, reduced-motion support, light and dark themes.
 

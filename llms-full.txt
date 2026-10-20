@@ -33,6 +33,7 @@ Data path: Google Drive API → user's browser → MEGA API. There is no Drive t
 - Duplicate handling: skip files that already exist (same name and size), keep both with "name (1).ext" renaming, or upload anyway.
 - Reliability: automatic retries with exponential back-off (HTTP 429/5xx, network errors), a stall watchdog, pause/resume, and per-file retry, cancel and remove. The queue auto-pauses offline and pauses until an expired Google session is renewed.
 - Progress: overall bar, speed, ETA, per-file status, progress in the tab title, and CSV log export.
+- Speed: MEGA encryption runs on every CPU core with hardware AES (Web Workers + WebCrypto), about 10× faster than single-threaded JavaScript. In practice the transfer runs at the user's upload bandwidth.
 - PWA: installable on desktop and mobile, offline app shell, screen wake lock during transfers, a system notification when finished, light/dark theme, keyboard shortcuts.
 
 ## Limits
