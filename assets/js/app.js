@@ -11,7 +11,7 @@
 (() => {
 'use strict';
 
-const VERSION = '2.0.0';
+const VERSION = '2.1.0';
 const CONFIG = window.D2M_CONFIG || {};
 
 /* ================================================================== helpers */
@@ -183,7 +183,7 @@ function ask({ title, text = '', ok = 'OK', cancel = 'Cancel', danger = false, i
   $('#askField').hidden = !input;
   $('#askOk').textContent = ok; $('#askCancel').textContent = cancel;
   $('#askOk').classList.toggle('danger', danger);
-  if (input){ $('#askLabel').textContent = input.label; $('#askInput').value = input.value || ''; }
+  if (input){ $('#askLabel').textContent = input.label; $('#askInput').value = input.value || ''; $('#askInput').placeholder = input.placeholder || ''; }
   return new Promise(resolve => {
     d.returnValue = 'cancel';
     d.addEventListener('close', () => {
@@ -479,7 +479,7 @@ function renderDriveHeader(){
 
 function driveShell(){
   if (G.shell) return G.shell;
-  const search = h('input', { type: 'search', placeholder: 'Filter, or Enter to search Drive', title: 'Type to filter this folder. Press Enter to search all of Google Drive.', 'aria-label': 'Search Google Drive', enterkeyhint: 'search', autocomplete: 'off', spellcheck: 'false' });
+  const search = h('input', { type: 'search', placeholder: 'Search files… (Enter searches all of Drive)', title: 'Type to filter this folder. Press Enter to search all of Google Drive.', 'aria-label': 'Search Google Drive', enterkeyhint: 'search', autocomplete: 'off', spellcheck: 'false' });
   search.addEventListener('input', () => { G.filter = search.value; G.anchor = -1; renderDriveList(); });
   search.addEventListener('keydown', e => {
     if (e.key === 'Enter'){ e.preventDefault(); searchDrive(search.value); }
@@ -736,12 +736,12 @@ const megaChildren = node => (node.children || []).slice().sort((a, b) =>
 const megaPathText = () => M.path.map((n, i) => i ? n.name : 'Cloud Drive').join(' / ');
 
 function renderMegaLogin(body){
-  const email = h('input', { id: 'mEmail', type: 'email', required: true, autocomplete: 'username', value: M.email, inputmode: 'email', autocapitalize: 'off', spellcheck: 'false' });
+  const email = h('input', { id: 'mEmail', type: 'email', required: true, placeholder: 'you@example.com', autocomplete: 'username', value: M.email, inputmode: 'email', autocapitalize: 'off', spellcheck: 'false' });
   const kept = M.needs2fa && M.pendingPw;
-  const pass = h('input', { id: 'mPass', type: 'password', required: !kept, autocomplete: 'current-password', placeholder: kept ? 'Password kept for this step' : '' });
+  const pass = h('input', { id: 'mPass', type: 'password', required: !kept, autocomplete: 'current-password', placeholder: kept ? 'Password kept for this step' : 'Your MEGA password' });
   const eye = h('button', { class: 'btn ghost sm icon', type: 'button', 'aria-label': 'Show password', 'aria-pressed': 'false' }, icon('eye'));
   eye.addEventListener('click', () => { const show = pass.type === 'password'; pass.type = show ? 'text' : 'password'; eye.setAttribute('aria-pressed', show); eye.setAttribute('aria-label', show ? 'Hide password' : 'Show password'); });
-  const code = h('input', { id: 'm2fa', inputmode: 'numeric', pattern: '[0-9]{6}', maxlength: 6, autocomplete: 'one-time-code', required: M.needs2fa });
+  const code = h('input', { id: 'm2fa', placeholder: '123456', inputmode: 'numeric', pattern: '[0-9]{6}', maxlength: 6, autocomplete: 'one-time-code', required: M.needs2fa });
   const codeWrap = h('div', { class: 'field', hidden: !M.needs2fa }, h('label', { for: 'm2fa' }, '2FA code'), code);
   const toggle2fa = h('a', { href: '#', class: 'muted' }, 'I use two-factor authentication');
   toggle2fa.addEventListener('click', e => { e.preventDefault(); M.needs2fa = true; codeWrap.hidden = false; code.required = true; toggle2fa.parentElement.remove(); code.focus(); });
@@ -809,7 +809,7 @@ function renderMega(){
 }
 
 async function newMegaFolder(parent){
-  const raw = await ask({ title: 'New MEGA folder', ok: 'Create', input: { label: 'Folder name', value: '' } });
+  const raw = await ask({ title: 'New MEGA folder', ok: 'Create', input: { label: 'Folder name', value: '', placeholder: 'e.g. Google Drive backup' } });
   if (raw == null) return;
   const name = cleanName(raw);
   if (!raw.trim()) return toast('Folder name can’t be empty.');

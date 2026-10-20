@@ -2,10 +2,10 @@
  * Caches only this site's own static files. Google/MEGA API traffic is never intercepted or cached,
  * so tokens, file contents and encrypted chunks never touch the Cache Storage. */
 'use strict';
-const VERSION = '2.0.0';
+const VERSION = '2.1.0';
 const CACHE = 'd2m-' + VERSION;
 const SHELL = [
-  '/', '/index.html', '/offline.html', '/privacy.html', '/terms.html', '/manifest.webmanifest', '/favicon.ico',
+  '/', '/index.html', '/offline.html', '/privacy.html', '/terms.html', '/how-to-transfer-google-drive-to-mega/', '/manifest.webmanifest', '/favicon.ico',
   '/assets/css/app.css', '/assets/js/app.js', '/assets/js/theme-init.js', '/assets/js/config.js',
   '/assets/vendor/megajs-1.3.10.min.js',
   '/assets/icons/logo.svg', '/assets/icons/favicon.svg', '/assets/icons/icon-192.png', '/assets/icons/icon-512.png',

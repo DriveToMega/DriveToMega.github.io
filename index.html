@@ -8,7 +8,7 @@
 <meta name="referrer" content="strict-origin-when-cross-origin">
 
 <title>Drive to MEGA — Copy Google Drive to MEGA, Free &amp; Private</title>
-<meta name="description" content="Transfer files and folders from Google Drive to MEGA directly in your browser. Free, no sign-up, no server — files stream from Google straight into MEGA's end-to-end encryption. Works as an installable app.">
+<meta name="description" content="Copy files and whole folders from Google Drive to MEGA in your browser. Free, no sign-up, no server: files stream straight into MEGA's end-to-end encryption.">
 <meta name="keywords" content="Google Drive to MEGA, transfer Google Drive to MEGA, copy Drive to MEGA, migrate Google Drive, MEGA upload, cloud to cloud transfer, Google Drive backup">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="author" content="Drive to MEGA">
@@ -17,6 +17,11 @@
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f4f6fa">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0b0e14">
 <link rel="canonical" href="https://drivetomega.github.io/">
+<link rel="alternate" hreflang="en" href="https://drivetomega.github.io/">
+<link rel="alternate" hreflang="x-default" href="https://drivetomega.github.io/">
+<link rel="alternate" type="text/plain" title="LLM-friendly summary" href="/llms.txt">
+<link rel="alternate" type="text/plain" title="LLM-friendly full documentation" href="/llms-full.txt">
+<!--SITE_VERIFICATION-->
 
 <!-- Open Graph / social -->
 <meta property="og:type" content="website">
@@ -24,7 +29,8 @@
 <meta property="og:title" content="Drive to MEGA — Copy Google Drive to MEGA in your browser">
 <meta property="og:description" content="Free, private cloud-to-cloud transfer. Files stream from Google Drive straight into MEGA's end-to-end encryption — no server in between.">
 <meta property="og:url" content="https://drivetomega.github.io/">
-<meta property="og:image" content="https://drivetomega.github.io/assets/og-image.png">
+<meta property="og:image" content="https://drivetomega.github.io/assets/og/home.png">
+<meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Drive to MEGA logo — a cloud with a transfer arrow, and the tagline: Google Drive to MEGA, straight from your browser.">
@@ -32,13 +38,19 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Drive to MEGA — Copy Google Drive to MEGA in your browser">
 <meta name="twitter:description" content="Free, private cloud-to-cloud transfer. No server, no sign-up — runs entirely in your browser.">
-<meta name="twitter:image" content="https://drivetomega.github.io/assets/og-image.png">
+<meta name="twitter:image" content="https://drivetomega.github.io/assets/og/home.png">
+<meta name="twitter:image:alt" content="Drive to MEGA — copy Google Drive to MEGA, straight from your browser.">
 
 <!-- Icons & PWA -->
 <link rel="icon" href="/favicon.ico" sizes="48x48">
 <link rel="icon" href="/assets/icons/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
+<link rel="icon" href="/assets/icons/favicon-96.png" type="image/png" sizes="96x96">
+<link rel="icon" href="/assets/icons/icon-192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
+<link rel="mask-icon" href="/assets/icons/mask-icon.svg" color="#3b6cf6">
 <link rel="manifest" href="/manifest.webmanifest">
+<meta name="msapplication-TileColor" content="#3b6cf6">
+<meta name="msapplication-config" content="/browserconfig.xml">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Drive→MEGA">
@@ -58,36 +70,178 @@
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "WebApplication",
+      "@type": "Organization",
+      "@id": "https://drivetomega.github.io/#org",
+      "name": "Drive to MEGA",
+      "url": "https://drivetomega.github.io/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://drivetomega.github.io/assets/icons/icon-512.png",
+        "width": 512,
+        "height": 512
+      },
+      "sameAs": [
+        "https://github.com/DriveToMega/DriveToMega.github.io"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://drivetomega.github.io/#website",
+      "name": "Drive to MEGA",
+      "alternateName": [
+        "DriveToMega",
+        "Drive→MEGA"
+      ],
+      "url": "https://drivetomega.github.io/",
+      "inLanguage": "en",
+      "publisher": {
+        "@id": "https://drivetomega.github.io/#org"
+      },
+      "description": "Free web app to copy files and folders from Google Drive to MEGA in the browser."
+    },
+    {
+      "@type": [
+        "WebApplication",
+        "SoftwareApplication"
+      ],
       "@id": "https://drivetomega.github.io/#app",
       "name": "Drive to MEGA",
       "url": "https://drivetomega.github.io/",
-      "description": "Transfer files and folders from Google Drive to MEGA directly in your browser, with no server in between.",
+      "description": "Free, open-source web app that copies files and folders from Google Drive to MEGA directly in the browser, with no server in between. Files stream from the Google Drive API into MEGA's client-side encryption.",
       "applicationCategory": "UtilitiesApplication",
-      "operatingSystem": "Any (web browser)",
+      "applicationSubCategory": "Cloud storage transfer",
+      "operatingSystem": "Any (web browser): Windows, macOS, Linux, ChromeOS, Android, iOS",
       "browserRequirements": "Requires JavaScript and a modern browser (Chrome, Edge, Firefox, Safari).",
+      "softwareVersion": "2.1.0",
+      "isAccessibleForFree": true,
+      "inLanguage": "en",
+          "codeRepository": "https://github.com/DriveToMega/DriveToMega.github.io",
       "image": "https://drivetomega.github.io/assets/icons/icon-512.png",
-      "screenshot": "https://drivetomega.github.io/assets/screenshots/desktop.png",
-      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "screenshot": [
+        "https://drivetomega.github.io/assets/screenshots/desktop.png",
+        "https://drivetomega.github.io/assets/screenshots/mobile.png"
+      ],
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "author": {
+        "@id": "https://drivetomega.github.io/#org"
+      },
+      "publisher": {
+        "@id": "https://drivetomega.github.io/#org"
+      },
+      "keywords": "Google Drive to MEGA, transfer Google Drive to MEGA, migrate Google Drive, MEGA upload, cloud to cloud transfer",
       "featureList": [
         "Copy files and whole folders from Google Drive to MEGA",
-        "Streams directly into MEGA's client-side encryption",
-        "Supports My Drive, Shared with me, Starred and Shared drives",
+        "Streams directly into MEGA's client-side encryption; no server",
+        "My Drive, Shared with me, Starred, Recent and Shared drives",
         "Exports Google Docs, Sheets and Slides to Office or PDF",
-        "Skips files that already exist, automatic retries, pause and resume",
-        "Installable progressive web app"
+        "Skips existing files or keeps both with automatic renaming",
+        "Automatic retries, pause and resume, CSV transfer log",
+        "Read-only Google access; MEGA password never stored",
+        "Installable progressive web app with offline shell"
+      ],
+      "potentialAction": {
+        "@type": "UseAction",
+        "target": "https://drivetomega.github.io/#workspace"
+      }
+    },
+    {
+      "@type": "HowTo",
+      "@id": "https://drivetomega.github.io/#howto",
+      "name": "How to copy Google Drive to MEGA with Drive to MEGA",
+      "totalTime": "PT5M",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "position": 1,
+          "name": "Connect Google Drive",
+          "text": "Sign in with Google and grant read-only Drive access."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 2,
+          "name": "Log in to MEGA",
+          "text": "Enter your MEGA email, password and 2FA code if enabled, then choose a destination folder."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 3,
+          "name": "Transfer",
+          "text": "Select files or folders in Google Drive and click Transfer to MEGA. Keep the tab open until the queue finishes."
+        }
       ]
     },
     {
       "@type": "FAQPage",
       "@id": "https://drivetomega.github.io/#faq",
       "mainEntity": [
-        { "@type": "Question", "name": "Is Drive to MEGA free?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. It is free and open source, with no account, no limits and no ads. You only need a Google account and a MEGA account." } },
-        { "@type": "Question", "name": "Do my files pass through your server?", "acceptedAnswer": { "@type": "Answer", "text": "No. There is no server. Files stream from Google's API into your browser and are encrypted by MEGA's library in your browser before upload." } },
-        { "@type": "Question", "name": "Is my MEGA password stored?", "acceptedAnswer": { "@type": "Answer", "text": "No. Your password is only used in your browser to derive MEGA's login key and is never saved or sent anywhere except MEGA." } },
-        { "@type": "Question", "name": "Can it change or delete my Google Drive files?", "acceptedAnswer": { "@type": "Answer", "text": "No. It requests read-only Drive access, so it can list and download files but never modify or delete them." } },
-        { "@type": "Question", "name": "What happens to Google Docs, Sheets and Slides?", "acceptedAnswer": { "@type": "Answer", "text": "They are exported to Word, Excel and PowerPoint (or PDF), or skipped — your choice." } },
-        { "@type": "Question", "name": "Can I close the tab while it transfers?", "acceptedAnswer": { "@type": "Answer", "text": "No. Transfers run in your browser, so keep the tab or app open until the queue finishes. The app keeps the screen awake and can notify you when done." } }
+        {
+          "@type": "Question",
+          "name": "Is Drive to MEGA free?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. It's free and open source, with no account, no limits and no ads. You only need a Google account and a MEGA account."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do my files pass through your server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No — there is no server. Files stream from Google's API into your browser and are encrypted by MEGA's library in your browser before upload. Your own internet connection is used for both the download and the upload."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my MEGA password stored?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. It's only used in your browser to derive MEGA's login key and is never saved or sent anywhere except MEGA."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can it change or delete my Google Drive files?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. It requests read-only Drive access, so it can list and download files but never modify or delete them."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What happens to Google Docs, Sheets and Slides?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "They're exported to Word, Excel and PowerPoint (or PDF), or skipped — your choice. Google limits exports to about 10 MB per file."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I close the tab while it transfers?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Transfers run in your browser, so keep the tab or app open until the queue finishes. The app keeps your screen awake and can notify you when it's done."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "My Google session expired mid-transfer. Did I lose progress?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Google sign-ins last about an hour. When yours runs out the queue pauses and a \"Renew\" button appears — one click and it carries on where it left off."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why does Google say the app isn't verified?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Self-hosted copies use your own Google Cloud project, which stays in \"Testing\" mode for personal use. Only the test users you add can sign in, and the warning is expected."
+          }
+        }
       ]
     }
   ]
@@ -131,6 +285,7 @@
       <a href="#features">Features</a>
       <a href="#security">Security</a>
       <a href="#faq">FAQ</a>
+      <a href="/how-to-transfer-google-drive-to-mega/">Guide</a>
     </nav>
     <div class="sp"></div>
     <span class="net" id="netBadge" hidden>● Offline</span>
@@ -254,6 +409,24 @@
   </div>
 
   <div class="marketing">
+    <section class="section" id="about">
+      <div class="wrap">
+        <h2>What is Drive to MEGA?</h2>
+        <p class="sub"><b>Drive to MEGA is a free web app that copies files and folders from Google Drive to a MEGA cloud storage account directly in your browser.</b> It needs no installation, no sign-up and no server: files stream from the Google Drive API into MEGA's client-side encryption on your own device.</p>
+        <dl class="glance">
+          <div class="card"><dt>Price</dt><dd>Free, no limits</dd></div>
+          <div class="card"><dt>Runs on</dt><dd>Any modern browser · installable app</dd></div>
+          <div class="card"><dt>Google access</dt><dd>Read-only (drive.readonly)</dd></div>
+          <div class="card"><dt>Servers involved</dt><dd>None — browser only</dd></div>
+          <div class="card"><dt>Copies</dt><dd>Files, whole folders, shared files</dd></div>
+          <div class="card"><dt>Google Docs</dt><dd>Exported to Office or PDF</dd></div>
+          <div class="card"><dt>MEGA login</dt><dd>Email + password, 2FA supported</dd></div>
+          <div class="card"><dt>Source code</dt><dd>Public on GitHub</dd></div>
+        </dl>
+        <p class="compare-link">Comparing options? Read <a href="/how-to-transfer-google-drive-to-mega/">how to transfer Google Drive to MEGA: 5 methods compared</a> (browser, rclone, Google Takeout, manual download and desktop sync).</p>
+      </div>
+    </section>
+
     <section class="section" id="how">
       <div class="wrap">
         <h2>How it works</h2>
@@ -317,6 +490,7 @@
     <a class="brand" href="/"><img src="/assets/icons/logo.svg" alt="" width="24" height="24" loading="lazy">Drive to MEGA</a>
     <div class="sp"></div>
     <nav aria-label="Footer">
+      <a href="/how-to-transfer-google-drive-to-mega/">Guide</a>
       <a href="/privacy.html">Privacy</a>
       <a href="/terms.html">Terms</a>
       <a href="https://github.com/DriveToMega/DriveToMega.github.io" rel="noopener">Source code</a>

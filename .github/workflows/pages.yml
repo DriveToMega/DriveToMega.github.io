@@ -27,6 +27,9 @@ jobs:
         env:
           # Set ONE of these in Settings → Secrets and variables → Actions. The secret wins if both exist.
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID || vars.GOOGLE_CLIENT_ID }}
+          # Optional: Search Console / Bing ownership tokens (Settings → Secrets and variables → Actions → Variables).
+          GOOGLE_SITE_VERIFICATION: ${{ vars.GOOGLE_SITE_VERIFICATION }}
+          BING_SITE_VERIFICATION: ${{ vars.BING_SITE_VERIFICATION }}
         run: node scripts/build.mjs
       - uses: actions/upload-pages-artifact@v3
         if: github.event_name != 'pull_request'
