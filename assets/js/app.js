@@ -11,7 +11,7 @@
 (() => {
 'use strict';
 
-const VERSION = '2.1.0';
+const VERSION = '2.2.0';
 const CONFIG = window.D2M_CONFIG || {};
 
 /* ================================================================== helpers */
@@ -136,7 +136,7 @@ function megaIconName(node){
 
 /* ================================================================== preferences */
 const CLIENT_ID_RE = /^[0-9]{6,}-[a-z0-9]{10,}\.apps\.googleusercontent\.com$/;
-const DEFAULT_PREFS = { theme: '', export: 'office', exists: 'skip', parallel: 2, conn: 4, notify: true, wake: true, sort: 'name', clientId: '' };
+const DEFAULT_PREFS = { theme: '', export: 'office', exists: 'skip', parallel: 2, conn: 4, notify: true, wake: true, fast: true, sort: 'name', clientId: '' };
 const prefs = (() => {
   let p = {};
   try { p = JSON.parse(localStorage.getItem('d2m-prefs') || '{}') || {}; } catch {}
@@ -154,6 +154,7 @@ const prefs = (() => {
   if ([1, 2, 4, 6, 8].includes(p.conn)) out.conn = p.conn;
   if (typeof p.notify === 'boolean') out.notify = p.notify;
   if (typeof p.wake === 'boolean') out.wake = p.wake;
+  if (typeof p.fast === 'boolean') out.fast = p.fast;
   if (['name', 'size', 'modified'].includes(p.sort)) out.sort = p.sort;
   if (typeof p.clientId === 'string' && CLIENT_ID_RE.test(p.clientId)) out.clientId = p.clientId;
   return out;
@@ -1046,14 +1047,34 @@ async function transferOne(item){
     source = (async function* (){ for (;;){ const { done, value } = await reader.read(); if (done) return; yield value; } })();
   }
 
-  const up = item.parent.upload({ name: item.finalName, size, maxConnections: prefs.conn });
+  // Fast path: encrypt on all CPU cores with hardware AES (mega-fast-crypto.js) and hand megajs ready-made
+  // ciphertext. megajs reads the 32-byte file key only when the upload completes, so it is filled in late.
+  const Buf = M.storage?.key?.constructor;
+  const fast = prefs.fast && !Q.fastDisabled && size > 0 && window.MegaFastCrypto?.supported() && typeof Buf?.alloc === 'function';
+  const key32 = fast ? Buf.alloc(32) : null;
+  const up = item.parent.upload(fast
+    ? { name: item.finalName, size, maxConnections: prefs.conn, uploadCiphertext: true, key: key32 }
+    : { name: item.finalName, size, maxConnections: prefs.conn });
   up.on('progress', p => { item.loaded = p.bytesLoaded; item.tick = Date.now(); scheduleRender(); });
   let cancelReject;
   const cancelled = new Promise((_, rej) => { cancelReject = rej; });
   ac.signal.addEventListener('abort', () => { try { up.destroy(err('Cancelled')); } catch {} cancelReject(err(item.stalled ? 'Transfer stalled' : 'Cancelled')); });
   const failed = new Promise((_, rej) => up.on('error', rej));
 
-  const feed = (async () => {
+  const feed = fast ? (async () => {
+    try {
+      await window.MegaFastCrypto.encryptStream({
+        pool: window.MegaFastCrypto.pool(), size, key24: crypto.getRandomValues(new Uint8Array(24)), signal: ac.signal,
+        source: (async function* (){ for await (const chunk of source){ if (ac.signal.aborted) throw err('Cancelled'); item.tick = Date.now(); yield chunk; } })(),
+        write: u => up.write(u) ? undefined : new Promise(r => up.once('drain', r)),
+        beforeLast: k => key32.set(k)
+      });
+    } catch (e){
+      if (/^Encryption worker/.test(e.message)){ Q.fastDisabled = true; e.retryable = true; toast('Fast encryption isn’t available here; using standard mode.'); }
+      throw e;
+    }
+    up.end();
+  })() : (async () => {
     let sent = 0;
     for await (const chunk of source){
       if (ac.signal.aborted) throw err('Cancelled');
@@ -1278,6 +1299,8 @@ function openSettings(){
   $('#inConn').value = String(prefs.conn);
   $('#inNotify').checked = prefs.notify;
   $('#inWake').checked = prefs.wake;
+  $('#inFast').checked = prefs.fast;
+  $('#inFast').disabled = !window.MegaFastCrypto?.supported();
   $('#inTheme').value = prefs.theme;
   $('#iosHint').hidden = !(/iphone|ipad|ipod/i.test(navigator.userAgent) && !navigator.standalone);
   $('#dlgSettings').showModal();
@@ -1295,6 +1318,7 @@ $('#dlgSave').addEventListener('click', () => {
   prefs.conn = Number($('#inConn').value);
   prefs.notify = $('#inNotify').checked;
   prefs.wake = $('#inWake').checked;
+  prefs.fast = $('#inFast').checked;
   prefs.theme = $('#inTheme').value;
   savePrefs(); applyTheme(); updateWakeLock();
   if (prefs.notify && 'Notification' in window && Notification.permission === 'default') Notification.requestPermission().catch(() => {});
