@@ -43,6 +43,14 @@ In short:
 
 Without step 2, the app still works. Each user pastes a Client ID in **⚙ Settings**.
 
+## SEO & AI discoverability
+
+- Pages: the home page, the [guide](https://drivetomega.github.io/how-to-transfer-google-drive-to-mega/) and the privacy/terms pages, each with a canonical URL, OG/Twitter image (`assets/og/`) and JSON-LD.
+- `sitemap.xml` (with images) and `robots.txt`, which explicitly allows AI crawlers.
+- [`llms.txt`](llms.txt) and [`llms-full.txt`](llms-full.txt) for AI agents.
+- Full favicon set: ICO, SVG, 96/192/512 PNG, Apple touch icon, Safari pinned tab and Windows tile.
+- 👉 **[docs/SEARCH_CONSOLE.md](docs/SEARCH_CONSOLE.md)** covers verifying the site in Google Search Console and Bing (through the `GOOGLE_SITE_VERIFICATION` / `BING_SITE_VERIFICATION` repo variables) and submitting the sitemap.
+
 ## Local development
 
 ```bash
@@ -57,6 +65,8 @@ Google sign-in needs `http://localhost:8080` in the client's authorized origins.
 
 ```
 index.html               App + landing page (SEO, JSON-LD, CSP)
+how-to-transfer-google-drive-to-mega/  Long-form guide (HowTo, Article, FAQ)
+llms.txt, llms-full.txt  Summaries for AI agents
 assets/js/app.js         Application logic
 assets/js/theme-init.js  Pre-paint theme and anti-framing guard
 assets/js/config.js      Site config (Client ID injected at deploy)

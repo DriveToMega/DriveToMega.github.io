@@ -334,3 +334,27 @@ kbd{border-bottom-width:2px}
 .full{width:100%}
 .center-text{text-align:center;margin-top:12px}
 .form .hint a{color:var(--muted)}
+
+/* ---------- guide / long-form content ---------- */
+.crumb-nav{font-size:13px;color:var(--muted);margin-bottom:14px}
+.crumb-nav a{color:var(--muted)}
+.tldr{padding:16px 18px;border-radius:14px;background:var(--sel);border:1px solid color-mix(in srgb,var(--accent) 30%,transparent)}
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--panel);margin:12px 0 8px}
+.table-wrap table{border-collapse:collapse;width:100%;min-width:640px;font-size:14px}
+.table-wrap th,.table-wrap td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+.table-wrap thead th{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);background:var(--panel-2)}
+.table-wrap tbody tr:last-child th,.table-wrap tbody tr:last-child td{border-bottom:0}
+.table-wrap tbody tr:first-child{background:var(--sel)}
+.steps-list li{margin-bottom:10px}
+.steps-list li:target{background:var(--sel);border-radius:8px}
+.trouble dt{font-weight:700;margin-top:14px}
+.trouble dd{margin:4px 0 0;color:color-mix(in srgb,var(--text) 82%,var(--muted))}
+.doc .faq details{border-bottom:1px solid var(--line)}
+.cta{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:20px;margin-top:36px}
+/* at-a-glance facts on the home page */
+.glance{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:0}
+.glance div{padding:14px 16px}
+.glance dt{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700}
+.glance dd{margin:4px 0 0;font-weight:600}
+@media (max-width:900px){.glance{grid-template-columns:1fr 1fr}}
+.compare-link{margin-top:18px}
